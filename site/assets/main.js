@@ -1,23 +1,12 @@
-// 커서 조명 (마우스가 있는 기기만)
-if (window.matchMedia('(pointer: fine)').matches) {
-  const root = document.documentElement;
-  window.addEventListener('pointermove', (e) => {
-    root.style.setProperty('--x', e.clientX + 'px');
-    root.style.setProperty('--y', e.clientY + 'px');
-  }, { passive: true });
-}
-
-// 스크롤 등장 효과 + 현재 섹션 메뉴 표시
+// 스크롤 등장 효과
 (() => {
-  const sections = document.querySelectorAll('main section');
-  const links = document.querySelectorAll('.toc a');
+  const sections = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
       e.target.classList.add('shown');
-      links.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
     });
-  }, { rootMargin: '-30% 0px -55% 0px' });
+  }, { rootMargin: '0px 0px -15% 0px' });
   sections.forEach((s) => io.observe(s));
   // 처음 화면에 보이는 섹션은 바로 표시
   requestAnimationFrame(() => sections.forEach((s) => {

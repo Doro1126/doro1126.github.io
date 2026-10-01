@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>김선호 · DevOps Engineer</title>
-<meta name="description" content="DevOps 엔지니어 김선호의 경력과 작업 기록">
+<meta name="description" content="서비스가 멈추지 않고, 팀이 더 쉽게 배포할 수 있는 인프라를 만드는 DevOps 엔지니어 김선호">
 <meta property="og:title" content="김선호 · DevOps Engineer">
 <meta property="og:description" content="AWS, Kubernetes, Terraform, GitOps 기반 인프라 구축과 운영">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -12,131 +12,206 @@
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<div class="spotlight" aria-hidden="true"></div>
-<a class="skip" href="#content">본문으로 건너뛰기</a>
+<a class="skip" href="#story">본문으로 건너뛰기</a>
 
-<div class="layout">
+<header class="top">
+  <a href="#" class="logo">seonho<span>.dev</span></a>
+  <nav aria-label="섹션 이동">
+    <a href="#story">소개</a><a href="#how">일하는 방식</a><a href="#work">대표 작업</a><a href="#contact">연락</a>
+  </nav>
+</header>
 
-  <!-- 왼쪽: 고정 영역 -->
-  <header class="side">
+<!-- 1. HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
     <div>
-      <p class="kicker">DevOps Engineer</p>
-      <h1>김선호</h1>
-      <p class="tagline">클라우드 인프라를 코드로 만들고,<br>운영하면서 생긴 문제를 구조로 해결합니다.</p>
-
-      <nav class="toc" aria-label="섹션 이동">
-        <a href="#about"><span class="bar"></span>About</a>
-        <a href="#experience"><span class="bar"></span>Experience</a>
-        <a href="#projects"><span class="bar"></span>Projects</a>
-        <a href="#stack"><span class="bar"></span>Stack</a>
-      </nav>
+      <p class="status"><span class="dot"></span>집닥에서 DevOps 엔지니어로 일하고 있습니다</p>
+      <h1>안녕하세요,<br><em>김선호</em>입니다.</h1>
+      <p class="lead">서비스가 멈추지 않고, 개발자가 더 쉽게 배포할 수 있는 인프라를 만듭니다.</p>
+      <div class="actions">
+        <button class="btn primary" data-pdf="docs/career.pdf" data-title="경력기술서">경력기술서 보기</button>
+        <a class="btn" href="#story">제 이야기 듣기 ↓</a>
+      </div>
     </div>
+    <figure class="loop" aria-hidden="true">
+      <svg viewBox="0 0 400 200">
+        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#60a5fa"/></linearGradient></defs>
+        <path class="track-path" d="M200 100 C 140 20, 40 20, 40 100 S 140 180, 200 100 S 360 20, 360 100 S 260 180, 200 100 Z"/>
+        <path class="flow-path" d="M200 100 C 140 20, 40 20, 40 100 S 140 180, 200 100 S 360 20, 360 100 S 260 180, 200 100 Z"/>
+        <text x="110" y="106">DEV</text><text x="290" y="106">OPS</text>
+      </svg>
+    </figure>
+  </div>
 
-    <ul class="social">
-      <li><a href="https://github.com/Doro1126" rel="noopener" aria-label="GitHub">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 00-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 015.8 0C17.3 4.3 18.3 4.6 18.3 4.6c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0012 .5z"/></svg></a></li>
-      <li><a href="mailto:kimseonho1126@gmail.com" aria-label="Email">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V6a1 1 0 011-1zm1 2.4V17h16V7.4l-8 5.3-8-5.3zM5.6 7l6.4 4.2L18.4 7H5.6z"/></svg></a></li>
-      <li><button data-pdf="docs/career.pdf" data-title="경력기술서" class="resume-link">경력기술서 ↗</button></li>
+</section>
+<!-- 파이프라인 띠 -->
+  <div class="pipeline" aria-hidden="true">
+    <div class="track">
+      <span>plan</span><i></i><span>code</span><i></i><span>build</span><i></i><span>test</span><i></i>
+      <span>release</span><i></i><span>deploy</span><i></i><span>operate</span><i></i><span>monitor</span><i></i>
+      <span>plan</span><i></i><span>code</span><i></i><span>build</span><i></i><span>test</span><i></i>
+      <span>release</span><i></i><span>deploy</span><i></i><span>operate</span><i></i><span>monitor</span><i></i>
+    </div>
+  </div>
+
+<!-- 2. 이야기 -->
+<section id="story" class="section reveal">
+  <div class="wrap narrow">
+    <p class="eyebrow">01 · 걸어온 길</p>
+    <h2>항공사 카운터에서 인프라까지</h2>
+    <ol class="path">
+      <li>
+        <span class="year">2023</span>
+        <div><h3>항공 예약·발권</h3>
+        <p>지연과 결항처럼 예측할 수 없는 상황에서 침착하게 판단하는 일을 했습니다. 지금도 장애가 나면 이때처럼 먼저 상황을 정리하고 움직입니다.</p></div>
+      </li>
+      <li>
+        <span class="year">2024</span>
+        <div><h3>클라우드 엔지니어로 전환</h3>
+        <p>K-Digital Training 클라우드 과정에서 Kubernetes, Terraform, Istio를 배우고 팀장으로 프로젝트를 이끌었습니다. 우수인재상을 받았습니다.</p></div>
+      </li>
+      <li>
+        <span class="year">2025</span>
+        <div><h3>그루핀 · DevOps</h3>
+        <p>AWS, NHN Cloud, 사내 서버가 섞인 환경을 처음 맡았습니다. Terraform으로 인프라를 코드로 관리하기 시작했고, Bastion 서버 없이 접근하는 구조로 바꿨습니다.</p></div>
+      </li>
+      <li class="now">
+        <span class="year">2026</span>
+        <div><h3>집닥 · DevOps</h3>
+        <p>EC2 약 50대로 돌아가던 레거시 인프라를 EKS 기반 신규 플랫폼으로 옮기고 있습니다. DB 업그레이드, 비용 절감, 배포 표준화까지 인프라 전반을 맡고 있습니다.</p></div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- 3. 일하는 방식 -->
+<section id="how" class="section alt reveal">
+  <div class="wrap">
+    <p class="eyebrow">02 · 일하는 방식</p>
+    <h2>이력서에 다 못 쓴 이야기</h2>
+    <div class="principles">
+      <article>
+        <span class="num">01</span>
+        <h3>근거를 보고 판단합니다</h3>
+        <p>리소스를 지우기 전에는 트래픽 로그와 지표로 "정말 안 쓰는지"부터 확인합니다. 그렇게 정리한 결과가 RDS 비용 57% 절감이었습니다.</p>
+      </article>
+      <article>
+        <span class="num">02</span>
+        <h3>원인을 끝까지 따라갑니다</h3>
+        <p>매일 같은 시각 DB CPU가 오르는 문제를 크론, 스케줄러, Lambda까지 하나씩 지워 가며 추적했습니다. 증상만 막으면 같은 일이 다시 생기기 때문입니다.</p>
+      </article>
+      <article>
+        <span class="num">03</span>
+        <h3>다음 사람을 위해 남깁니다</h3>
+        <p>제가 직접 처리하는 방식은 서비스가 늘면 같이 일이 늘어납니다. 그래서 새 서비스는 파일 두 개만 추가하면 배포되도록 파이프라인을 표준화했습니다.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 대표 작업 -->
+<section id="work" class="section reveal">
+  <div class="wrap">
+    <p class="eyebrow">03 · 대표 작업</p>
+    <h2>직접 맡아서 끝까지 해낸 일</h2>
+
+    <article class="feature">
+      <div class="flow">
+        <div class="node old">MySQL 5.7<small>지원 종료</small></div>
+        <div class="arrow"></div>
+        <div class="node">정적 분석<small>호환성 점검</small></div>
+        <div class="arrow"></div>
+        <div class="node new">MySQL 8.0<small>QA → 운영</small></div>
+      </div>
+      <div class="feature-body">
+        <h3>Aurora MySQL 5.7 → 8.0 업그레이드</h3>
+        <p>지원 종료로 늘어나던 연장 지원 비용을 없앴고, 매일 운영 DB를 덤프하던 QA 동기화를 실시간 복제로 바꿨습니다.</p>
+        <ul class="facts"><li><b>100%</b>연장 지원 비용 제거</li><li><b>1일→실시간</b>QA 동기화</li></ul>
+        <button class="link" data-pdf="docs/mysql-upgrade.pdf" data-title="MySQL 5.7 → 8.0 업그레이드">자세히 보기 →</button>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="flow">
+        <div class="node">Jenkins<small>CI</small></div>
+        <div class="arrow"></div>
+        <div class="node">Nexus<small>Artifact</small></div>
+        <div class="arrow"></div>
+        <div class="node">ArgoCD<small>GitOps</small></div>
+        <div class="arrow"></div>
+        <div class="node new">EKS<small>Deploy</small></div>
+      </div>
+      <div class="feature-body">
+        <h3>GitOps 배포 플랫폼</h3>
+        <p>서버에 직접 밀어 넣던 배포를 GitOps로 바꾸고, Jenkins 공용 라이브러리로 서비스마다 달랐던 파이프라인을 하나로 맞췄습니다.</p>
+        <ul class="facts"><li><b>2 files</b>신규 서비스 배포 단위</li><li><b>15종</b>Terraform 모듈</li></ul>
+        <button class="link" data-pdf="docs/case-studies.pdf" data-title="작업 사례">자세히 보기 →</button>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="flow">
+        <div class="node">Exporter<small>메트릭·로그</small></div>
+        <div class="arrow"></div>
+        <div class="node">Prometheus<small>Loki</small></div>
+        <div class="arrow"></div>
+        <div class="node new">Grafana<small>Alert → Slack</small></div>
+      </div>
+      <div class="feature-body">
+        <h3>모니터링 직접 구축</h3>
+        <p>상용 에이전트가 운영 서버 메모리 장애를 일으킨 뒤, 오픈소스로 모니터링을 다시 만들어 레거시 관제를 대체했습니다.</p>
+        <ul class="facts"><li><b>30대</b>운영 서버 적용</li><li><b>포트 단위</b>장애 감지</li></ul>
+        <button class="link" data-pdf="docs/case-studies.pdf" data-title="작업 사례">자세히 보기 →</button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- 5. 도구 -->
+<section class="section alt reveal">
+  <div class="wrap">
+    <p class="eyebrow">04 · 주로 쓰는 도구</p>
+    <ul class="logos">
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg" alt="" class="invert"><span>AWS</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/kubernetes/kubernetes-original.svg" alt=""><span>Kubernetes</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/terraform/terraform-original.svg" alt=""><span>Terraform</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/argocd/argocd-original.svg" alt=""><span>ArgoCD</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/jenkins/jenkins-original.svg" alt=""><span>Jenkins</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/helm/helm-original.svg" alt="" class="invert"><span>Helm</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/prometheus/prometheus-original.svg" alt=""><span>Prometheus</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/grafana/grafana-original.svg" alt=""><span>Grafana</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/docker/docker-original.svg" alt=""><span>Docker</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/mysql/mysql-original.svg" alt=""><span>MySQL</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/githubactions/githubactions-original.svg" alt=""><span>GitHub Actions</span></li>
+      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/python/python-original.svg" alt=""><span>Python</span></li>
     </ul>
-  </header>
+  </div>
+</section>
 
-  <!-- 오른쪽: 스크롤 영역 -->
-  <main id="content">
+<!-- 6. 문서 + 연락 -->
+<section id="contact" class="section reveal">
+  <div class="wrap narrow">
+    <p class="eyebrow">05 · 더 보기</p>
+    <h2>궁금한 점이 있다면 편하게 연락 주세요</h2>
+    <ul class="docs">
+      <li><button data-pdf="docs/career.pdf" data-title="경력기술서">경력기술서<span>PDF</span></button></li>
+      <li><button data-pdf="docs/mysql-upgrade.pdf" data-title="MySQL 업그레이드">MySQL 업그레이드 사례<span>PDF</span></button></li>
+      <li><button data-pdf="docs/case-studies.pdf" data-title="작업 사례">배포 · 모니터링 · 장애 분석 사례<span>PDF</span></button></li>
+      <li><button data-pdf="docs/edu-project-summary.pdf" data-title="교육과정 프로젝트 요약">교육과정 프로젝트 요약<span>PDF</span></button></li>
+    </ul>
+    <div class="contact">
+      <a class="btn primary" href="mailto:kimseonho1126@gmail.com">kimseonho1126@gmail.com</a>
+      <a class="btn" href="https://github.com/Doro1126" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</section>
 
-    <section id="about" class="reveal">
-      <h2 class="mobile-title">About</h2>
-      <p>AWS 기반 인프라를 구축하고 운영하는 DevOps 엔지니어입니다. 지금은 <strong>집닥</strong>에서 EC2 중심의 레거시 환경을 EKS 기반 신규 플랫폼으로 옮기고 있고, 그 전에는 <strong>그루핀</strong>에서 AWS, NHN Cloud, 사내 Proxmox를 함께 쓰는 하이브리드 인프라를 운영했습니다.</p>
-      <p>DB 업그레이드처럼 서비스 전체에 영향을 주는 작업을 준비부터 마무리까지 맡아 왔고, 배포와 모니터링을 팀이 같은 방식으로 쓸 수 있게 정리하는 일을 좋아합니다. 장애가 나면 원인을 끝까지 확인하고, 다음에 같은 일이 생기지 않도록 설정과 문서로 남겨 둡니다.</p>
-    </section>
-
-    <section id="experience" class="reveal">
-      <h2 class="mobile-title">Experience</h2>
-      <ol class="list">
-        <li class="item">
-          <div class="when">2026.04 — 현재</div>
-          <div>
-            <h3>DevOps · 집닥</h3>
-            <p>레거시 인프라의 EKS 전환과 운영을 맡고 있습니다. Aurora MySQL 5.7에서 8.0 업그레이드를 주도하면서 QA 동기화를 실시간 복제로 바꿨고, 유휴 리소스 정리와 MSP 재계약으로 클라우드 비용을 줄였습니다. Jenkins Shared Library와 ArgoCD로 배포 방식을 통일하고, 모니터링을 Prometheus 기반으로 교체했습니다.</p>
-            <ul class="tags"><li>EKS</li><li>Terraform</li><li>ArgoCD</li><li>Jenkins</li><li>Aurora MySQL</li><li>DMS</li><li>AWS WAF</li><li>Prometheus</li></ul>
-          </div>
-        </li>
-        <li class="item">
-          <div class="when">2025.01 — 2026.04</div>
-          <div>
-            <h3>DevOps · 그루핀</h3>
-            <p>하이브리드 인프라를 Terraform으로 관리하기 시작했고, SSM을 도입해 Bastion 서버 없이 접근하도록 바꿨습니다. Istio를 Ambient 모드로 전환하고, Vector와 Elasticsearch로 로그 수집 구조를 다시 만들었습니다. Bedrock 도입 때는 LiteLLM으로 팀별 사용량을 관리했습니다.</p>
-            <ul class="tags"><li>HCP Terraform</li><li>AWS SSM</li><li>Istio</li><li>Karpenter</li><li>Vector</li><li>Elasticsearch</li><li>LiteLLM</li></ul>
-          </div>
-        </li>
-        <li class="item">
-          <div class="when">2024.07 — 2025.01</div>
-          <div>
-            <h3>클라우드 엔지니어 양성과정 · 한국정보교육원</h3>
-            <p>Kubernetes, Terraform, Istio를 다루는 팀 프로젝트에서 팀장을 맡았습니다. 우수인재상 수상.</p>
-            <ul class="tags"><li>Kubernetes</li><li>Helm</li><li>Istio</li><li>Jenkins</li></ul>
-          </div>
-        </li>
-      </ol>
-      <button class="more" data-pdf="docs/career.pdf" data-title="경력기술서">경력기술서 전체 보기 →</button>
-    </section>
-
-    <section id="projects" class="reveal">
-      <h2 class="mobile-title">Projects</h2>
-      <ul class="list">
-        <li><button class="item project" data-pdf="docs/mysql-upgrade.pdf" data-title="MySQL 5.7 → 8.0 업그레이드">
-          <img src="assets/thumbs/mysql-upgrade.jpg" alt="" loading="lazy">
-          <div>
-            <h3>MySQL 5.7 → 8.0 업그레이드 <span class="arrow">↗</span></h3>
-            <p>사전 호환성 분석부터 운영 반영까지의 절차, 덤프 배치를 실시간 복제로 바꾼 과정과 그 과정에서 찾은 문제들.</p>
-            <ul class="tags"><li>Aurora</li><li>DMS CDC</li><li>VPC Peering</li></ul>
-          </div></button></li>
-        <li><button class="item project" data-pdf="docs/case-studies.pdf" data-title="작업 사례">
-          <img src="assets/thumbs/case-studies.jpg" alt="" loading="lazy">
-          <div>
-            <h3>배포 구조 · 모니터링 · 장애 분석 <span class="arrow">↗</span></h3>
-            <p>GitOps 배포 구조 설계, 서비스 장애 감지 체계 구축, 그리고 DB 커넥션 누수의 원인을 찾아간 기록.</p>
-            <ul class="tags"><li>GitOps</li><li>Grafana</li><li>Postmortem</li></ul>
-          </div></button></li>
-        <li><button class="item project" data-pdf="docs/edu-project-summary.pdf" data-title="교육과정 프로젝트 요약">
-          <img src="assets/thumbs/edu-project-summary.jpg" alt="" loading="lazy">
-          <div>
-            <h3>교육과정 프로젝트 요약 <span class="arrow">↗</span></h3>
-            <p>Helm과 Shell로 만든 사용자별 자동 배포, Istio Canary 배포, CI/CD 파이프라인 프로젝트 요약.</p>
-            <ul class="tags"><li>Helm</li><li>Istio</li><li>Harbor</li></ul>
-          </div></button></li>
-        <li><button class="item project" data-pdf="docs/edu-portfolio.pdf" data-title="교육과정 발표자료">
-          <img src="assets/thumbs/edu-portfolio.jpg" alt="" loading="lazy">
-          <div>
-            <h3>교육과정 발표자료 <span class="arrow">↗</span></h3>
-            <p>위 프로젝트들의 발표 슬라이드 원본. 용량이 커서 여는 데 시간이 조금 걸립니다.</p>
-            <ul class="tags"><li>Slides</li></ul>
-          </div></button></li>
-      </ul>
-    </section>
-
-    <section id="stack" class="reveal">
-      <h2 class="mobile-title">Stack</h2>
-      <dl class="stack">
-        <div><dt>Cloud</dt><dd>AWS (EKS, Aurora, DMS, WAF, ALB/NLB, Route 53, SSM, CloudWatch, Lambda) · NHN Cloud</dd></div>
-        <div><dt>Container</dt><dd>Kubernetes · Karpenter · Fargate · Helm · ArgoCD · Istio · Traefik</dd></div>
-        <div><dt>IaC / CI·CD</dt><dd>Terraform · Jenkins · Nexus · GitLab · GitHub Actions · Docker</dd></div>
-        <div><dt>Observability</dt><dd>Prometheus · Grafana · Loki · Vector · Elasticsearch</dd></div>
-        <div><dt>Language</dt><dd>Python · Groovy · Bash · SQL</dd></div>
-      </dl>
-    </section>
-
-    <footer>직접 만든 정적 페이지입니다. GitHub Actions로 GitHub Pages에 배포합니다.</footer>
-  </main>
-</div>
+<footer class="foot">© 2026 김선호 · 이 페이지는 GitHub Actions로 자동 배포됩니다.</footer>
 
 <dialog id="viewer" aria-labelledby="viewer-title">
   <div class="viewer-bar">
     <strong id="viewer-title"></strong>
-    <span>
-      <a id="viewer-open" target="_blank" rel="noopener">새 탭에서 열기</a>
-      <button id="viewer-close" aria-label="닫기">✕</button>
-    </span>
+    <span><a id="viewer-open" target="_blank" rel="noopener">새 탭에서 열기</a><button id="viewer-close" aria-label="닫기">✕</button></span>
   </div>
   <iframe id="viewer-frame" title="PDF 문서"></iframe>
 </dialog>
