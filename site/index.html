@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>김선호 | DevOps Engineer</title>
+<meta name="description" content="DevOps 엔지니어 김선호 - 플랫폼 구축, CI/CD 표준화, 관측 체계, FinOps">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header class="nav">
+  <a class="brand" href="#top"><span class="prompt">~$</span> seonho</a>
+  <nav aria-label="주요 메뉴">
+    <a href="#about">about</a>
+    <a href="#experience">experience</a>
+    <a href="#projects">projects</a>
+    <a href="#stack">stack</a>
+    <a href="#contact">contact</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="terminal" role="img" aria-label="터미널 창: whoami 명령 결과로 김선호, DevOps Engineer 출력">
+      <div class="term-bar"><i></i><i></i><i></i><span>seonho@devops: ~</span></div>
+      <pre class="term-body"><span class="c-prompt">$</span> whoami
+<span class="c-out">김선호 (Kim Seonho) · DevOps Engineer</span>
+
+<span class="c-prompt">$</span> cat focus.txt
+<span class="c-out">Platform · CI/CD · Observability · FinOps</span>
+
+<span class="c-prompt">$</span> <span id="typed"></span><span class="cursor">▋</span></pre>
+    </div>
+    <h1>반복되는 운영을<br>표준과 자동화로 바꾸는 엔지니어</h1>
+    <p class="lead">레거시 인프라를 EKS·GitOps 기반 플랫폼으로 전환하고, 장애에서 얻은 결론을 코드와 문서로 남겨 같은 문제가 반복되지 않게 만듭니다.</p>
+    <div class="cta">
+      <button class="btn primary" data-pdf="docs/career.pdf" data-title="경력기술서">경력기술서 보기</button>
+      <a class="btn" href="#projects">프로젝트 둘러보기</a>
+    </div>
+  </section>
+
+  <!-- METRICS -->
+  <section class="metrics" aria-label="주요 성과">
+    <div><b>57%</b><span>RDS 월 비용 절감</span></div>
+    <div><b>15종</b><span>Terraform 커스텀 모듈</span></div>
+    <div><b>2 files</b><span>신규 서비스 배포 추가 단위</span></div>
+    <div><b>30대</b><span>운영 서버 관측 체계 적용</span></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section">
+    <h2><span class="hash">#</span> about</h2>
+    <div class="about">
+      <p>DevOps 경력 1년 9개월. 클라우드 엔지니어 교육과정을 거쳐 하이브리드 인프라 운영(그루핀)과 레거시 인프라의 신규 플랫폼 전환(집닥)을 맡아 왔습니다.</p>
+      <p>"제가 직접 처리하는 일"보다 "다음 사람이 같은 판단을 반복하지 않게 하는 일"에 시간을 씁니다. 배포는 파일 두 개로 끝나게, 알림은 같은 방식으로 바로 추가할 수 있게, 인프라 소유 경계는 한 문장 기준으로 정리하는 식입니다.</p>
+      <p>AI 도구(Kiro, MCP)를 인프라·로그·비용 분석에 활용하되, 결과는 공식 문서와 실행 결과로 검증한 뒤 적용합니다.</p>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="section">
+    <h2><span class="hash">#</span> experience</h2>
+    <ol class="timeline">
+      <li>
+        <div class="when">2026.04 — 현재</div>
+        <div class="what">
+          <h3>(주) 집닥 <small>DevOps · 플랫폼기획실 개발팀</small></h3>
+          <ul>
+            <li>Aurora MySQL 5.7 → 8.0 업그레이드 주도, mysqldump 배치를 DMS CDC 실시간 동기화로 전환</li>
+            <li>유휴 리소스 정리와 MSP 재계약으로 클라우드 비용 절감, RDS 월 비용 57% 절감</li>
+            <li>EKS(Karpenter·Fargate) 신규 플랫폼 구축, Terraform 모듈 15종, Terraform/ArgoCD 관리 경계 정립</li>
+            <li>Jenkins Shared Library · Nexus · ArgoCD 기반 CI/CD 표준화, 운영 배포 승인 구조 설계</li>
+            <li>AWS WAF 단계적 차단 전환, Pod Identity·ESO로 소스 내 자격증명 제거</li>
+            <li>Prometheus · Grafana · Loki로 레거시 관제 대체, 서비스 DOWN 알림 체계 수립</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="when">2025.01 — 2026.04</div>
+        <div class="what">
+          <h3>(주) 그루핀 <small>DevOps</small></h3>
+          <ul>
+            <li>HCP Terraform 도입, AWS SSM으로 Bastion·PEM 키 제거</li>
+            <li>Istio Ambient 모드 전환, mTLS 및 선택적 Waypoint(L7) 적용</li>
+            <li>Vector · Elasticsearch 로그 파이프라인, GeoIP 글로벌 트래픽 대시보드</li>
+            <li>LiteLLM으로 Bedrock 팀·사용자별 예산 통제, 블록체인 노드 인프라 구축</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="when">2024.07 — 2025.01</div>
+        <div class="what">
+          <h3>클라우드 엔지니어 양성과정 <small>한국정보교육원 · K-Digital Training · 우수인재상</small></h3>
+          <ul>
+            <li>Kubernetes, Terraform, Helm, Istio, CI/CD 팀 프로젝트 (팀장)</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="section">
+    <h2><span class="hash">#</span> projects</h2>
+    <p class="hint">카드를 누르면 문서를 바로 볼 수 있습니다.</p>
+    <div class="cards">
+      <button class="card" data-pdf="docs/career.pdf" data-title="경력기술서">
+        <span class="tag">career</span>
+        <h3>경력기술서</h3>
+        <p>집닥·그루핀 프로젝트 8건을 기간, 내용, 사용 기술 기준으로 정리</p>
+        <span class="meta">PDF · 3p</span>
+      </button>
+      <button class="card" data-pdf="docs/mysql-upgrade.pdf" data-title="Case Study · MySQL 업그레이드">
+        <span class="tag">database</span>
+        <h3>Aurora MySQL 5.7 → 8.0 업그레이드</h3>
+        <p>사전 정적 분석, 단계별 업그레이드, 덤프 배치의 CDC 실시간 복제 전환과 비용 절감</p>
+        <span class="meta">PDF · 2p</span>
+      </button>
+      <button class="card" data-pdf="docs/case-studies.pdf" data-title="Case Studies">
+        <span class="tag">platform</span>
+        <h3>GitOps 플랫폼 · 관측 체계 · 포스트모템</h3>
+        <p>Terraform/ArgoCD 소유 경계 설계, 서비스 DOWN SLI, DB 커넥션 누수 근본 원인 분석</p>
+        <span class="meta">PDF · 4p</span>
+      </button>
+      <button class="card" data-pdf="docs/edu-project-summary.pdf" data-title="교육과정 프로젝트 요약서">
+        <span class="tag">training</span>
+        <h3>교육과정 프로젝트 요약</h3>
+        <p>Helm·Shell 기반 K8s 자동 배포, Istio Canary 배포, CI/CD 파이프라인 구축</p>
+        <span class="meta">PDF · 7p</span>
+      </button>
+      <button class="card" data-pdf="docs/edu-portfolio.pdf" data-title="교육과정 발표자료">
+        <span class="tag">training</span>
+        <h3>교육과정 팀 프로젝트 발표자료</h3>
+        <p>팀장으로 진행한 프로젝트 2건과 개인 프로젝트 발표 슬라이드</p>
+        <span class="meta">PDF · 84p · 대용량</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack" class="section">
+    <h2><span class="hash">#</span> stack</h2>
+    <dl class="stack">
+      <div><dt>cloud</dt><dd>AWS (EKS, Aurora, DMS, WAF, ALB/NLB, Route 53, SSM, CloudWatch, Lambda), NHN Cloud</dd></div>
+      <div><dt>container</dt><dd>Kubernetes, Karpenter, Fargate, Helm, ArgoCD, Istio, Traefik, Gateway API, ESO</dd></div>
+      <div><dt>iac · ci/cd</dt><dd>Terraform (HCP), Jenkins Shared Library, Nexus, GitLab, GitHub Actions, Docker BuildKit</dd></div>
+      <div><dt>observability</dt><dd>Prometheus, Grafana, Loki, Blackbox Exporter, Vector, Elasticsearch, Kibana</dd></div>
+      <div><dt>language</dt><dd>Python, Groovy, Bash, SQL</dd></div>
+      <div><dt>ai</dt><dd>Kiro, MCP, Amazon Bedrock, LiteLLM</dd></div>
+    </dl>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section contact">
+    <h2><span class="hash">#</span> contact</h2>
+    <p><span class="c-prompt">$</span> mail <a href="mailto:kimseonho1126@gmail.com">kimseonho1126@gmail.com</a></p>
+    <p><span class="c-prompt">$</span> open <a href="https://github.com/GITHUB_ID" rel="noopener">github.com/GITHUB_ID</a></p>
+  </section>
+</main>
+
+<footer class="footer">© 2026 Kim Seonho · Deployed with GitHub Actions → GitHub Pages</footer>
+
+<!-- PDF 뷰어 -->
+<dialog id="viewer" aria-labelledby="viewer-title">
+  <div class="viewer-bar">
+    <span id="viewer-title"></span>
+    <div>
+      <a id="viewer-open" class="btn small" target="_blank" rel="noopener">새 탭에서 열기</a>
+      <button id="viewer-close" class="btn small" aria-label="닫기">닫기 ✕</button>
+    </div>
+  </div>
+  <iframe id="viewer-frame" title="PDF 문서"></iframe>
+</dialog>
+
+<script src="assets/main.js"></script>
+</body>
+</html>

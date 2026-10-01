@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>김선호_경력기술서</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Helvetica Neue", "Apple SD Gothic Neo", sans-serif; color: #222; word-break: keep-all; }
+
+  .page { width: 210mm; height: 297mm; padding: 17mm 18mm 15mm 19mm; page-break-after: always; overflow: hidden;
+          display: flex; flex-direction: column; }
+  .page:last-child { page-break-after: auto; }
+  /* 프로젝트 블록을 페이지 높이에 맞춰 고르게 배치 */
+  .content { flex: 1; display: flex; flex-direction: column; gap: 6mm; }
+  .content > .project { flex: 1; }
+  .project > div:last-child { display: flex; flex-direction: column; }
+
+  /* 1페이지 헤더 */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; height: 40mm; }
+  .header h1 { font-size: 20pt; font-weight: 700; letter-spacing: -0.5pt; margin-top: 1mm; }
+  .contact { margin-right: 4mm; font-size: 10.5pt; line-height: 1; }
+  .contact div { display: flex; align-items: center; height: 8mm; }
+  .contact svg { width: 4.6mm; height: 4.6mm; margin-right: 2.6mm; fill: #111; }
+  .section-title { font-size: 14pt; font-weight: 700; margin-bottom: 3.2mm; }
+
+  /* 진한 구분선 (섹션 시작 / 2페이지 이후 상단) */
+  .rule-dark { position: relative; height: 0; border-top: 1.6px solid #777; margin-bottom: 7mm; flex: none; }
+  .rule-dark::before { content: ""; position: absolute; left: 0; top: -2.4px; width: 9.5mm; height: 3.4px; background: #111; }
+  .page.cont .rule-dark { margin-top: 3mm; }
+
+  /* 프로젝트 블록 */
+  .project { display: grid; grid-template-columns: 51mm 1fr; }
+  .project .name { font-size: 10.6pt; font-weight: 700; line-height: 1.45; padding-right: 4mm; }
+  .row1 { display: flex; justify-content: space-between; align-items: baseline; }
+  .company { font-size: 11pt; font-weight: 700; }
+  .period { font-size: 10.6pt; }
+  .role { font-size: 10pt; margin-top: 2.2mm; }
+
+  .summary { font-size: 10pt; line-height: 1.55; margin-top: 4mm; }
+  .points { font-size: 9pt; line-height: 1.62; margin-top: 1.8mm; padding-left: 3.6mm; }
+  .points li { margin: 0.7mm 0; }
+  .unused-result { margin-top: 2.2mm; font-size: 9pt; line-height: 1.6; }
+  .unused-result strong { font-weight: 700; margin-right: 1.6mm; }
+  .stack { margin-top: auto; padding-top: 4mm; font-size: 8.4pt; color: #666; line-height: 1.5; }
+  .stack .stack-label { display: inline-block; font-weight: 700; color: #333; margin-right: 2mm; }
+
+  /* 연한 구분선 (프로젝트 사이) */
+  .rule-light { position: relative; height: 0; border-top: 1px solid #ccc; }
+  .rule-light::before { content: ""; position: absolute; left: 0; top: -2px; width: 9.5mm; height: 3px; background: #bbb; }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <div class="header">
+    <h1>경력기술서</h1>
+    <div class="contact">
+      <div><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 4a3.3 3.3 0 110 6.6A3.3 3.3 0 0112 6zm0 14.2a7.9 7.9 0 01-6.1-2.9c.9-2 3.5-3.1 6.1-3.1s5.2 1.1 6.1 3.1a7.9 7.9 0 01-6.1 2.9z"/></svg>김선호</div>
+      <div><svg viewBox="0 0 24 24"><path d="M2 5h20v14H2V5zm2 2v.3l8 5.2 8-5.2V7H4zm16 10V9.7l-8 5.2-8-5.2V17h16z"/></svg>kimseonho1126@gmail.com</div>
+    </div>
+  </div>
+  <div class="section-title">경력 사항</div>
+  <div class="rule-dark"></div>
+  <div class="content">
+  <div class="project">
+    <div class="name">CI/CD 표준화 및 GitOps 배포 체계 구축</div>
+    <div>
+      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 05 ~ 진행 중</span></div>
+      <div class="role">DevOps / 사원</div>
+      <div class="summary">SSH 직접 배포 방식을 GitOps로 전환하고 Jenkins 공용 라이브러리 기반으로 서비스별 파이프라인 통일</div>
+      <ul class="points">
+        <li>Jenkins Shared Library를 공통 함수와 템플릿 단위로 설계 및 파이프라인 표준화</li>
+        <li>App-of-Apps GitOps 구조로 신규 서비스 배포를 설정 파일 2개 추가로 단축</li>
+        <li>운영 배포는 Build/Deploy 분리 및 승인 단계를 둔 구조로 설계</li>
+        <li>이미지 태그 규칙 수립 및 Nexus 이미지 정리 자동화로 태그 덮어쓰기와 디스크 부족 문제 개선</li>
+        <li>Jenkins 정규식 기반 RBAC 정비 및 ArgoCD AppProject 단위 개발자 권한 분리</li>
+        <li>공용 Helm 차트로 배포 설정 통일, 서비스별 빌드 캐시 분리로 동시 빌드 실패 개선</li>
+        <li>Jenkins Job 명명 규칙 정리 및 신규 서비스 배포 가이드 문서화</li>
+      </ul>
+      <div class="stack"><span class="stack-label">사용 기술</span>Jenkins, Groovy, Nexus, ArgoCD, Helm, Docker BuildKit, Gradle, Python</div>
+    </div>
+  </div>
+  <div class="rule-light"></div>
+  <div class="project">
+    <div class="name">EKS 신규 플랫폼 구축 및 레거시 관제 대체</div>
+    <div>
+      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 05 ~ 진행 중</span></div>
+      <div class="role">DevOps / 사원</div>
+      <div class="summary">레거시 EC2 약 50대를 대체할 EKS 기반 신규 플랫폼 구축 및 인프라 코드화</div>
+      <ul class="points">
+        <li>EKS(Karpenter, Fargate) 신규 플랫폼 구축 및 Terraform 커스텀 모듈 15종 작성</li>
+        <li>AWS 리소스는 Terraform, 쿠버네티스 리소스는 ArgoCD가 관리하도록 관리 경계 정립</li>
+        <li>ArgoCD와 ALB Controller를 Fargate로 분리해 서비스 노드와 무중단 분리</li>
+        <li>Prometheus, Grafana, Loki 기반 모니터링 구축으로 레거시 관제 대체, 운영 서버 30대 적용</li>
+        <li>Blackbox Exporter 기반 서비스 DOWN 감지 및 Slack 알림 체계 수립</li>
+        <li>Private Hosted Zone과 내부 NLB로 레거시 서버와 신규 서비스 간 통신 구성</li>
+        <li>Traefik, Gateway API 기반 라우팅 및 External Secrets Operator 기반 시크릿 동기화 구성</li>
+      </ul>
+      <div class="stack"><span class="stack-label">사용 기술</span>EKS, Karpenter, Fargate, Terraform, ArgoCD, Prometheus, Grafana, Loki</div>
+    </div>
+  </div>
+  <div class="rule-light"></div>
+  </div>
+</section>
+
+<section class="page cont">
+  <div class="rule-dark"></div>
+  <div class="content">
+  <div class="project">
+    <div class="name">AWS WAF 차단 정책 운영 및 시크릿 관리 개선</div>
+    <div>
+      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 04 ~ 진행 중</span></div>
+      <div class="role">DevOps / 사원</div>
+      <div class="summary">리뉴얼 오픈 이후 WAF 규칙의 단계적 차단 전환 및 소스 코드 내 자격증명 정리</div>
+      <ul class="points">
+        <li>오탐 가능성이 낮은 규칙부터 관찰 기간을 달리해 Count에서 Block으로 단계 전환</li>
+        <li>Label, Path, Regex, BodySize 기반 Custom Rule 6종 설계, 오탐 원인 분석 후 예외 처리</li>
+        <li>사내 IP 차단 시 상세 내역을 Slack으로 전달하는 알림 연동</li>
+        <li>Pod Identity, ESO 도입으로 소스 내 AWS 키와 DB 비밀번호 제거 및 시크릿 관리 표준화</li>
+        <li>Root 계정 MFA 적용 및 전체 개방 보안그룹 정리</li>
+      </ul>
+      <div class="stack"><span class="stack-label">사용 기술</span>AWS WAF, CloudWatch, EventBridge, Lambda(Python), Pod Identity, ESO</div>
+    </div>
+  </div>
+  <div class="rule-light"></div>
+  <div class="project">
+    <div class="name">Aurora MySQL 8.0 업그레이드 및 DB 운영 비용 절감</div>
+    <div>
+      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 04 ~ 2026. 08</span></div>
+      <div class="role">DevOps / 사원</div>
+      <div class="summary">Aurora MySQL 5.7 지원 종료 대응을 위한 QA·운영 DB 8.0.42 업그레이드 주도 및 QA 데이터 동기화 방식 개선</div>
+      <ul class="points">
+        <li>mysqlsh 정적 분석으로 예약어, Zero Date, 문자셋, 인증 방식 등 호환성 위험 사전 검증</li>
+        <li>QA부터 운영까지 단계별 체크리스트로 업그레이드, Reader 기준 스키마 이관으로 영향 최소화</li>
+        <li>mysqldump 배치를 DMS Serverless CDC로 전환, 268개 테이블 실시간 동기화</li>
+        <li>반복되던 DB CPU 급등 원인을 Lambda 배치 분석으로 확인 후 복제 대상 조정, 슬로우 쿼리 튜닝 및 인덱스 개선 협업</li>
+        <li>Extended Support 비용 제거 및 8.4 LTS 업그레이드 대비 접속 계층 영향도 사전 검토</li>
+      </ul>
+      <div class="stack"><span class="stack-label">사용 기술</span>Aurora MySQL, MySQL Shell, AWS DMS, VPC Peering, EventBridge, Lambda</div>
+    </div>
+  </div>
+  <div class="rule-light"></div>
+  <div class="project">
+    <div class="name">유휴 리소스 정리 및 MSP 재계약을 통한 클라우드 비용 절감</div>
+    <div>
+      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 04 ~ 2026. 08</span></div>
+      <div class="role">DevOps / 사원</div>
+      <div class="summary">사용 여부를 데이터로 확인한 뒤 리소스를 정리하고, 사용량 분석을 바탕으로 클라우드 계약 조건 개선</div>
+      <ul class="points">
+        <li>VPC Flow Logs, CloudWatch 지표, DNS 연결 상태 교차 확인 후 미사용 DB 클러스터, 스테이징 환경, 유휴 LB·EIP 정리</li>
+        <li>레거시 서버 종료 전 nginx 설정과 의존성 확인, 헬스체크 경로 분리로 무중단 종료</li>
+        <li>삭제 대상 데이터 S3 백업 및 리소스 의존 관계 역순의 삭제 절차 정리</li>
+        <li>MSP 재계약을 통해 기존보다 유리한 할인 조건 확보</li>
+        <li>DB 업그레이드와 리소스 정리를 함께 진행해 RDS 월 비용 57% 절감</li>
+      </ul>
+      <div class="stack"><span class="stack-label">사용 기술</span>VPC Flow Logs, CloudWatch, Route 53, CloudFront, S3, CloudTrail</div>
+    </div>
+  </div>
+  <div class="rule-light"></div>
+  </div>
+</section>
+
+<section class="page cont">
+  <div class="rule-dark"></div>
+  <div class="content">
+  <div class="project">
+    <div class="name">생성형 AI 사용량 통제 및 블록체인 인프라 구축</div>
+    <div>
+      <div class="row1"><span class="company">(주) 그루핀</span><span class="period">2025. 12 ~ 2026. 04</span></div>
+      <div class="role">DevOps / 사원</div>
+      <div class="summary">Bedrock 팀·사용자별 사용량 관리 환경과 블록체인 노드·서비스 인프라 구축</div>
+      <ul class="points">
+        <li>LiteLLM으로 팀·사용자별 Bedrock 예산 한도 설정 및 사용자별 사용 로그 S3 저장 체계 구축</li>
+        <li>블록체인 노드(Validator, Sentry, State-Sync) 개발·운영 환경 구축</li>
+        <li>EKS, NKS 기반 서비스 인프라와 Redis, MongoDB, MySQL, VPC 피어링 구성</li>
+        <li>WAF 규칙 기반 봇 트래픽 차단 및 CloudWatch, Lambda, Telegram 연동 알림 구성</li>
+      </ul>
+      <div class="stack"><span class="stack-label">사용 기술</span>Amazon Bedrock, LiteLLM, S3, NKS, EKS, Redis, MongoDB, MySQL</div>
+    </div>
+  </div>
+  <div class="rule-light"></div>
+  <div class="project">
+    <div class="name">Istio Ambient 전환 및 로그 파이프라인 개선</div>
+    <div>
+      <div class="row1"><span class="company">(주) 그루핀</span><span class="period">2025. 06 ~ 2025. 12</span></div>
+      <div class="role">DevOps / 사원</div>
+      <div class="summary">Sidecar 없는 서비스 메시 전환 및 개발팀이 직접 로그를 검색할 수 있는 환경 구축</div>
+      <ul class="points">
+        <li>Istio Ambient 모드 전환, mTLS 전체 적용 및 정책이 필요한 서비스에만 Waypoint(L7) 프록시 선택 적용</li>
+        <li>Nginx Ingress에서 Istio로 전환 및 CI/CD 연동용 Helm 템플릿 작성</li>
+        <li>Vector, Elasticsearch 기반 로그 파이프라인 구축, VRL과 GeoIP를 활용한 글로벌 트래픽 대시보드 제공</li>
+        <li>Karpenter 기반 Auto Scaling 및 Velero 기반 클러스터 백업·복구 체계 구축</li>
+        <li>Jenkins, GitLab, GitHub Actions CI/CD 표준화 및 Multi-stage 빌드 적용</li>
+      </ul>
+      <div class="stack"><span class="stack-label">사용 기술</span>Istio, Karpenter, Velero, Vector, Elasticsearch, Kibana, Jenkins, GitHub Actions</div>
+    </div>
+  </div>
+  <div class="rule-light"></div>
+  <div class="project">
+    <div class="name">IaC 도입 및 하이브리드 인프라 접근 관리 개선</div>
+    <div>
+      <div class="row1"><span class="company">(주) 그루핀</span><span class="period">2025. 01 ~ 2025. 06</span></div>
+      <div class="role">DevOps / 사원</div>
+      <div class="summary">AWS, NHN Cloud, 사내 Proxmox를 함께 쓰는 하이브리드 인프라의 코드 관리 및 서버 접근 방식 개선</div>
+      <ul class="points">
+        <li>HCP Terraform 도입으로 인프라 형상 관리 및 동일 환경 복제 체계 구축</li>
+        <li>Infracost 기반 변경 전 비용 검토 및 관리되지 않던 리소스 정리</li>
+        <li>AWS SSM 도입으로 Bastion 호스트와 PEM 키 제거, IAM 기반 접근 권한 통합</li>
+        <li>사내 방화벽과 Site-to-Site VPN 구축, Route 53 및 사내 Nginx, Keycloak 운영</li>
+      </ul>
+      <div class="stack"><span class="stack-label">사용 기술</span>HCP Terraform, Infracost, AWS SSM, IAM, Site-to-Site VPN, Proxmox</div>
+    </div>
+  </div>
+  <div class="rule-light"></div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+# GitHub Pages 배포: main 브랜치에 push 하면 site/ 디렉토리를 검증 후 배포한다.
+name: deploy-pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # index.html 이 참조하는 로컬 파일(PDF, CSS, JS)이 실제로 존재하는지 확인
+      - name: Verify local references
+        run: |
+          set -euo pipefail
+          cd site
+          missing=0
+          for ref in $(grep -oE '(data-pdf|href|src)="[^"#:]+"' index.html | sed -E 's/.*="([^"]+)"/\1/' | sort -u); do
+            if [ ! -e "$ref" ]; then echo "::error::missing file: $ref"; missing=1; fi
+          done
+          exit $missing
+
+      # 개인정보·비밀값이 공개 디렉토리에 섞이지 않았는지 확인
+      - name: Guard against sensitive strings
+        run: |
+          set -euo pipefail
+          if grep -rIlE '010-[0-9]{4}-[0-9]{4}|AKIA[0-9A-Z]{16}|BEGIN (RSA|OPENSSH) PRIVATE KEY' site; then
+            echo "::error::sensitive string found in site/"; exit 1
+          fi
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

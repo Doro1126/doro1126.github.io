@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Case Study · Aurora MySQL 5.7 → 8.0 업그레이드</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Helvetica Neue", "Apple SD Gothic Neo", sans-serif; color: #222; word-break: keep-all; }
+  .page { width: 210mm; height: 297mm; padding: 18mm 19mm 15mm; page-break-after: always; overflow: hidden; }
+  .page:last-child { page-break-after: auto; }
+  .eyebrow { font-size: 9pt; font-weight: 700; letter-spacing: 1.5pt; color: #2563eb; }
+  h1 { font-size: 20pt; font-weight: 800; margin: 2mm 0 2mm; letter-spacing: -0.4pt; }
+  .meta { font-size: 9.5pt; color: #666; padding-bottom: 5mm; border-bottom: 2px solid #222; }
+  h2 { font-size: 12.5pt; font-weight: 800; margin: 7mm 0 2.5mm; }
+  p, li { font-size: 9.6pt; line-height: 1.68; }
+  ul { padding-left: 4.5mm; } li { margin: 0.8mm 0; }
+  .note { margin-top: 3mm; font-size: 8.6pt; color: #777; }
+  .flow { display: flex; align-items: center; gap: 2mm; margin: 3mm 0 1mm; flex-wrap: wrap; }
+  .step { border: 1px solid #c9d3e6; background: #f4f7fc; border-radius: 1.5mm; padding: 2mm 3mm; font-size: 8.8pt; }
+  .arrow { color: #2563eb; font-weight: 700; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin-top: 3mm; }
+  .box { border: 1px solid #ddd; border-radius: 1.5mm; padding: 3mm 4mm; }
+  .box h3 { font-size: 9.6pt; margin-bottom: 1.5mm; }
+  .box.before { background: #fbf4f4; border-color: #ecc8c8; }
+  .box.after { background: #f2f9f4; border-color: #c4e3cc; }
+  .kpi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 3mm; }
+  .kpi div { border: 1px solid #ddd; border-radius: 1.5mm; padding: 4mm; text-align: center; }
+  .kpi b { display: block; font-size: 17pt; color: #2563eb; margin-bottom: 1mm; }
+  .kpi span { font-size: 8.8pt; color: #555; }
+  table { width: 100%; border-collapse: collapse; margin-top: 2.5mm; font-size: 8.8pt; }
+  th, td { border: 1px solid #ddd; padding: 2mm 3mm; text-align: left; vertical-align: top; line-height: 1.5; }
+  th { background: #f4f7fc; }
+  .foot { position: absolute; }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <div class="eyebrow">CASE STUDY · DATABASE</div>
+  <h1>Aurora MySQL 5.7 → 8.0 업그레이드와 실시간 동기화 전환</h1>
+  <div class="meta">역할: DevOps (업그레이드 주도, 동기화 구조 설계·구축) · 기간: 약 4개월 · 환경: AWS Aurora MySQL, QA/운영 2개 환경</div>
+
+  <h2>1. 배경</h2>
+  <ul>
+    <li>운영 중인 Aurora MySQL 5.7이 표준 지원 종료 버전이 되면서, 연장 지원(Extended Support) 비용이 RDS 전체 비용의 절반 이상을 차지하는 상태</li>
+    <li>QA 데이터는 매일 운영 Writer에서 mysqldump로 전체를 삭제 후 다시 적재하는 방식이라, 운영 DB 부하와 데이터 지연이 함께 발생</li>
+    <li>향후 서비스 단위 분리(MSA 전환)를 위해 안정적인 최신 DB 기반이 먼저 필요</li>
+  </ul>
+
+  <h2>2. 사전 검증</h2>
+  <ul>
+    <li><b>정적 분석</b>: MySQL Shell <code>checkForServerUpgrade</code>로 스키마를 사전 점검 (Fatal 0건, Warning 194건)</li>
+    <li><b>위험 분류</b>: 예약어 충돌, Zero Date 기본값, utf8mb3 → utf8mb4 전환, 인증 방식 변경 항목을 "8.0에서 깨지는가 / 8.4에서 깨지는가" 기준으로 우선순위화</li>
+    <li><b>선행 검증</b>: 테스트 환경을 먼저 8.0으로 올리고 서비스 동작을 확인한 뒤 운영에 반영</li>
+    <li><b>무영향 이관</b>: 스키마 이관은 Reader 엔드포인트에서 일관성 덤프로 수행해 Writer 부하 없이 처리</li>
+  </ul>
+
+  <h2>3. 운영 업그레이드 절차</h2>
+  <p>서비스 이용이 가장 적은 새벽 시간대에, 단계별 체크리스트와 담당자 분담표를 기준으로 진행했습니다.</p>
+  <div class="flow">
+    <span class="step">사전 공지</span><span class="arrow">→</span>
+    <span class="step">점검 화면 전환</span><span class="arrow">→</span>
+    <span class="step">스냅샷 백업</span><span class="arrow">→</span>
+    <span class="step">버전 충돌 요소 제거</span><span class="arrow">→</span>
+    <span class="step">5.7 → 8.0 업그레이드</span><span class="arrow">→</span>
+    <span class="step">서비스 검증 · 오픈</span>
+  </div>
+  <p class="note">점검 화면은 로드밸런서 고정 응답 방식으로 준비하고 QA에서 리허설했습니다. 앱과 웹을 요청 헤더 하나로 구분해 앱에는 JSON, 웹에는 HTML 점검 페이지를 반환하는 구조입니다.</p>
+
+  <h2>4. QA 동기화: 덤프 배치 → CDC 실시간 복제</h2>
+  <div class="compare">
+    <div class="box before"><h3>Before</h3><ul>
+      <li>운영 Writer에서 직접 덤프 (부하 높음)</li>
+      <li>1일 1회 스케줄러, 전체 삭제 후 적재</li>
+      <li>Shell Script + cron으로 관리</li></ul></div>
+    <div class="box after"><h3>After</h3><ul>
+      <li>binlog 기반 변경분만 복제 (부하 거의 없음)</li>
+      <li>실시간 동기화, 268개 테이블</li>
+      <li>DMS Serverless 관리형 서비스</li></ul></div>
+  </div>
+  <ul style="margin-top:3mm">
+    <li>운영과 QA VPC 대역이 같아 Peering이 불가능 → QA DB를 다른 대역의 VPC로 옮긴 뒤 Peering 구성, 인터넷 경유 없이 복제</li>
+    <li>FK 제약, 중복 키, Lock 대기, 타임존 9시간 차이 등 트러블슈팅 6건을 원인과 조치로 문서화</li>
+  </ul>
+</section>
+
+<section class="page">
+  <h2 style="margin-top:0">5. 운영 중 발견한 문제와 추적 과정</h2>
+  <table>
+    <tr><th style="width:26%">증상</th><th>추적 과정</th><th style="width:28%">조치</th></tr>
+    <tr><td>매일 같은 시각 QA DB CPU가 70%까지 상승</td>
+        <td>전체 서버 crontab → DB Event Scheduler → 애플리케이션 스케줄러 순으로 배제, 마지막으로 남은 Lambda 배치를 디컴파일해 월별 통계를 지우고 다시 쓰는 로직을 확인. 이 대량 변경이 CDC로 그대로 복제되며 부하를 만든 구조</td>
+        <td>운영팀 확인 후 해당 통계 테이블을 복제 대상에서 제외</td></tr>
+    <tr><td>QA Read DB CPU 피크 100%</td>
+        <td>장시간 Sleep 세션과 슬로우 쿼리 확인, 작은 인스턴스의 메모리 부족이 디스크 I/O와 CPU를 함께 끌어올리는 구조로 판단</td>
+        <td>슬로우 쿼리 튜닝·인덱스 개선, 인스턴스 Scale Up</td></tr>
+    <tr><td>QA Writer 커넥션 풀 부족</td>
+        <td>인스턴스 크기별 max_connections 한계 확인</td>
+        <td>Scale Up 후 Aurora 자동 failover로 바뀐 Writer/Reader 역할 원복</td></tr>
+  </table>
+
+  <h2>6. 결과</h2>
+  <div class="kpi">
+    <div><b>100%</b><span>Extended Support 비용 제거</span></div>
+    <div><b>57%</b><span>RDS 월 비용 절감<br>(유휴 DB 정리 포함)</span></div>
+    <div><b>1일 → 실시간</b><span>QA 데이터 동기화 주기</span></div>
+  </div>
+  <ul style="margin-top:4mm">
+    <li>운영 Writer 덤프 작업 제거로 운영 DB 부하 해소</li>
+    <li>QA Read DB CPU 피크 100% → 24%</li>
+  </ul>
+
+  <h2>7. 남긴 것</h2>
+  <ul>
+    <li><b>Phase별 체크리스트</b>: 테스트 환경 정리 → QA 업그레이드 → 운영 사전 점검 → 운영 업그레이드 → 8.4 LTS 준비까지 단계와 담당자를 문서로 정리</li>
+    <li><b>8.4 LTS 영향도 분석</b>: 인증 플러그인, TLS cipher, thread handling, 보안 연결 기본값 변경 등 접속 계층 위험 4건을 "파라미터 그룹으로 유지 / 클라이언트 전환" 두 안의 트레이드오프로 정리</li>
+    <li><b>DMS 운영 가이드</b>: 테이블 매핑 추가 절차, 코멘트 미복제 등 알려진 제약과 대응 방법</li>
+  </ul>
+
+  <p class="note" style="margin-top:8mm">※ 회사 정보 보호를 위해 회사명, 내부 호스트명, 금액은 제외하고 비율로만 표기했습니다.</p>
+</section>
+
+</body>
+</html>
