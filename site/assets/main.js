@@ -1,13 +1,3 @@
-// 터미널 타이핑 효과
-(() => {
-  const el = document.getElementById('typed');
-  const text = 'kubectl get projects --sort-by=impact';
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = text; return; }
-  let i = 0;
-  const tick = () => { el.textContent = text.slice(0, ++i); if (i < text.length) setTimeout(tick, 55); };
-  setTimeout(tick, 600);
-})();
-
 // PDF 뷰어: data-pdf 속성이 있는 요소를 누르면 모달로 연다.
 // 모바일(특히 iOS)은 iframe PDF 표시가 불안정하므로 새 탭으로 연다.
 (() => {
