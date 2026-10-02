@@ -32,16 +32,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .cta { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff; font-weight: 700; font-size: 15px;
        padding: 10px 18px; border-radius: 10px; transition: transform .15s, box-shadow .15s; }
 .cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(242,107,29,.3); }
-.cta.dark { background: var(--ink); }
-.cta.ghost { background: transparent; color: var(--ink); padding-inline: 4px; }
-.cta.ghost:hover { box-shadow: none; color: var(--accent); }
 
 /* HERO */
 .hero { padding: 96px 0 88px; }
 .hero .wrap { display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: center; }
 .hero h1 { color: var(--ink); font-size: clamp(38px, 5.2vw, 60px); font-weight: 800; line-height: 1.2; letter-spacing: -.035em; }
 .lead { margin-top: 22px; font-size: 19px; max-width: 460px; }
-.hero-actions { display: flex; gap: 18px; align-items: center; margin-top: 34px; }
 
 /* HERO 목업: GitOps 배포 화면 */
 .mock { border-radius: 16px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); overflow: hidden; font-size: 13px; }
