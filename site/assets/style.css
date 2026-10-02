@@ -48,12 +48,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .mock-bar { display: flex; align-items: center; gap: 6px; padding: 12px 14px; border-bottom: 1px solid var(--line); background: #fbfbfc; }
 .mock-bar i { width: 10px; height: 10px; border-radius: 50%; background: #e5e7eb; }
 .mock-bar span { margin-left: 10px; color: var(--muted); font: 12px var(--mono); }
-.mock-body { display: grid; grid-template-columns: 140px 1fr; min-height: 300px; }
+.mock-body { display: grid; grid-template-columns: 140px 1fr; height: 392px; }  /* 탭 전환 시 높이 고정 → 왼쪽 제목 흔들림 방지 */
 .mock-side { border-right: 1px solid var(--line); padding: 14px 10px; display: flex; flex-direction: column; gap: 4px; }
 .mock-side b { font-size: 13px; color: var(--ink); padding: 4px 8px 10px; }
 .mock-side span { padding: 6px 8px; border-radius: 6px; color: var(--muted); }
 .mock-side span.on { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
-.mock-main { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.mock-main { padding: 16px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
 .mock-title { display: flex; justify-content: space-between; align-items: center; color: var(--ink); font-weight: 700; }
 .mock-title small { font-weight: 500; color: var(--muted); }
 .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -267,3 +267,5 @@ dialog iframe { flex: 1; width: 100%; border: 0; }
 }
 
 .doc-type.imp { color: #2563eb; background: #eff4ff; border-color: #dbe5ff; }
+
+.mock-main > * { flex-shrink: 0; }

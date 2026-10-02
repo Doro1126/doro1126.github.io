@@ -187,7 +187,7 @@
 <!-- 문제 해결 -->
 <section id="how" class="section alt reveal">
   <div class="wrap">
-    <p class="eyebrow">장애 대응 기록</p>
+    <p class="eyebrow">장애 대응</p>
     <h2>문제를<br><span class="accent">끝까지</span> 따라간 기록</h2>
     <p class="sub">증상만 막으면 같은 일이 다시 생깁니다.<br>그래서 원인을 찾을 때까지 후보를 하나씩 지워 갑니다.</p>
 
@@ -200,10 +200,10 @@
         <div class="doc-body">
           <div class="doc-tabs" role="tablist" aria-label="보고서 항목"><button role="tab" id="c1t0" aria-controls="c1p0" aria-selected="true" class="on">현상</button><button role="tab" id="c1t1" aria-controls="c1p1" aria-selected="false">원인 분석</button><button role="tab" id="c1t2" aria-controls="c1p2" aria-selected="false">조치</button><button role="tab" id="c1t3" aria-controls="c1p3" aria-selected="false">재발 방지</button></div>
           <div class="doc-panels">
-            <div role="tabpanel" id="c1p0" aria-labelledby="c1t0"><h4>현상</h4><p>앱을 Flutter로 전환한 직후, 일부 사용자의 파일 업로드가 403으로 실패했습니다.</p><p>WAF 로그에서 SQL Injection 규칙이 업로드 요청을 차단한 기록을 확인했습니다.</p></div>
-            <div role="tabpanel" id="c1p1" aria-labelledby="c1t1" hidden><h4>원인 분석</h4><p>새 HTTP 라이브러리는 업로드 구분자가 "----"로 시작하는데, 이것이 SQL 주석 패턴으로 오인되고 있었습니다.</p><p>30일치 로그를 대조해 기존 라이브러리 요청은 한 번도 걸리지 않았고, 새 라이브러리 요청은 등장 즉시 차단됐다는 것을 확인했습니다.</p></div>
-            <div role="tabpanel" id="c1p2" aria-labelledby="c1t2" hidden><h4>조치</h4><p>해당 규칙의 업로드 본문 검사만 관찰 모드로 바꾸고, 업로드 경로에만 예외를 두는 Custom Rule을 추가했습니다.</p><p>다른 요청은 기존처럼 그대로 검사되도록 범위를 좁혔습니다.</p></div>
-            <div role="tabpanel" id="c1p3" aria-labelledby="c1t3" hidden><h4>재발 방지</h4><p>예외는 IP가 아니라 경로와 라벨 기준으로 관리하도록 바꿨습니다.</p><p>새 규칙은 하루 동안 정상 트래픽 매칭 0건을 확인한 뒤에만 차단으로 전환하는 기준을 정했습니다.</p><p>허용된 IP가 차단되면 상세 내역이 Slack으로 바로 오도록 알림을 만들었습니다.</p></div>
+            <div role="tabpanel" id="c1p0" aria-labelledby="c1t0"><h4>현상</h4><p>앱을 Flutter로 전환한 직후 일부 사용자의 파일 업로드가 403으로 실패</p><p>WAF 로그에서 SQL Injection 규칙의 업로드 요청 차단 기록 확인</p></div>
+            <div role="tabpanel" id="c1p1" aria-labelledby="c1t1" hidden><h4>원인 분석</h4><p>새 HTTP 라이브러리의 업로드 구분자가 "----"로 시작해 SQL 주석 패턴으로 오인</p><p>30일치 로그 대조로 기존 라이브러리 요청은 미탐지, 새 라이브러리 요청은 등장 즉시 차단됨을 확인</p></div>
+            <div role="tabpanel" id="c1p2" aria-labelledby="c1t2" hidden><h4>조치</h4><p>해당 규칙의 업로드 본문 검사만 관찰 모드로 전환</p><p>업로드 경로에만 예외를 두는 Custom Rule 추가, 나머지 요청은 기존대로 검사</p></div>
+            <div role="tabpanel" id="c1p3" aria-labelledby="c1t3" hidden><h4>재발 방지</h4><p>예외 기준을 IP에서 경로·라벨 기준으로 변경</p><p>신규 규칙은 하루 동안 정상 트래픽 매칭 0건 확인 후 차단 전환</p><p>허용 IP 차단 시 상세 내역 Slack 자동 알림</p></div>
           </div>
         </div>
         <footer class="inc-foot"><span>결과</span><ul><li>업로드 정상화</li><li>규칙 전환 기준 수립</li></ul></footer>
@@ -214,10 +214,10 @@
         <div class="doc-body">
           <div class="doc-tabs" role="tablist" aria-label="보고서 항목"><button role="tab" id="c2t0" aria-controls="c2p0" aria-selected="true" class="on">현상</button><button role="tab" id="c2t1" aria-controls="c2p1" aria-selected="false">원인 분석</button><button role="tab" id="c2t2" aria-controls="c2p2" aria-selected="false">조치</button><button role="tab" id="c2t3" aria-controls="c2p3" aria-selected="false">재발 방지</button></div>
           <div class="doc-panels">
-            <div role="tabpanel" id="c2p0" aria-labelledby="c2t0"><h4>현상</h4><p>인증번호 요청 API는 바로 성공으로 응답하는데, 실제 메일은 최대 12~16분 뒤에 도착했습니다.</p></div>
-            <div role="tabpanel" id="c2p1" aria-labelledby="c2t1" hidden><h4>원인 분석</h4><p>알림 서비스 로그에서 DB 저장이 매번 실패하는 것을 확인했습니다.</p><p>코드에는 있는 컬럼이 QA DB 스키마에는 반영되지 않아 저장 쿼리가 실패하고 있었습니다.</p><p>저장에 실패한 메시지가 큐에서 30초마다 다시 전달되며 재시도를 반복한 것이 지연의 원인이었습니다.</p></div>
-            <div role="tabpanel" id="c2p2" aria-labelledby="c2t2" hidden><h4>조치</h4><p>누락된 컬럼을 추가한 뒤 재시도 없이 0.2초 만에 발송되는 것을 확인했습니다.</p><p>다른 데이터를 지운 상태에서도 바로 처리되는지 확인해, 이 컬럼이 유일한 원인임을 확정했습니다.</p></div>
-            <div role="tabpanel" id="c2p3" aria-labelledby="c2t3" hidden><h4>재발 방지</h4><p>같은 변경을 모든 환경에 정식 반영하고 스키마 문서도 갱신하도록 요청했습니다.</p><p>조사 중 발견한 별건도 함께 보고했습니다.</p><p>메일 템플릿이 DB 없이 만료 시간 없는 캐시에만 남아 있어, 캐시가 재시작되면 바로 발송이 실패할 수 있는 상태였습니다.</p></div>
+            <div role="tabpanel" id="c2p0" aria-labelledby="c2t0"><h4>현상</h4><p>인증번호 요청 API는 즉시 성공 응답, 실제 메일은 최대 12~16분 뒤 도착</p></div>
+            <div role="tabpanel" id="c2p1" aria-labelledby="c2t1" hidden><h4>원인 분석</h4><p>알림 서비스 로그에서 DB 저장 실패 반복 확인</p><p>코드에 있는 컬럼이 QA DB 스키마에 미반영되어 저장 쿼리 실패</p><p>저장에 실패한 메시지가 큐에서 30초마다 재전달되며 재시도 반복</p></div>
+            <div role="tabpanel" id="c2p2" aria-labelledby="c2t2" hidden><h4>조치</h4><p>누락 컬럼 추가 후 재시도 없이 0.2초 발송 확인</p><p>다른 데이터를 지운 상태에서도 즉시 처리되는지 확인해 유일한 원인으로 확정</p></div>
+            <div role="tabpanel" id="c2p3" aria-labelledby="c2t3" hidden><h4>재발 방지</h4><p>전 환경 스키마 정식 반영 및 스키마 문서 갱신 요청</p><p>조사 중 발견한 별건 보고</p><p>메일 템플릿이 만료 시간 없는 캐시에만 존재해, 캐시 재시작 시 발송 실패 위험</p></div>
           </div>
         </div>
         <footer class="inc-foot"><span>결과</span><ul><li>발송 지연 16분 → 0.2초</li><li>숨은 장애 위험 사전 보고</li></ul></footer>
@@ -228,10 +228,10 @@
         <div class="doc-body">
           <div class="doc-tabs" role="tablist" aria-label="보고서 항목"><button role="tab" id="c3t0" aria-controls="c3p0" aria-selected="true" class="on">현상</button><button role="tab" id="c3t1" aria-controls="c3p1" aria-selected="false">원인 분석</button><button role="tab" id="c3t2" aria-controls="c3p2" aria-selected="false">조치</button><button role="tab" id="c3t3" aria-controls="c3p3" aria-selected="false">재발 방지</button></div>
           <div class="doc-panels">
-            <div role="tabpanel" id="c3p0" aria-labelledby="c3t0"><h4>현상</h4><p>매일 10시와 18시에 CPU가 평소 20%대에서 70%까지 오르는 패턴을 확인했습니다.</p><p>시간이 정확히 반복된다는 점에서 예약 작업을 먼저 의심했습니다.</p></div>
-            <div role="tabpanel" id="c3p1" aria-labelledby="c3t1" hidden><h4>원인 분석</h4><p>VPC Flow Logs로 해당 시각 DB에 붙는 접속 출처를 좁히고, 서버 33대의 크론, DB 이벤트 스케줄러, 애플리케이션 스케줄러를 차례로 확인하며 후보를 지웠습니다.</p><p>마지막으로 남은 Lambda 배치를 디컴파일해, 월별 통계 약 2만 건을 지우고 다시 쓰는 로직을 찾았습니다.</p><p>이 대량 변경이 실시간 복제로 그대로 넘어오며 부하를 만들고 있었습니다.</p></div>
-            <div role="tabpanel" id="c3p2" aria-labelledby="c3t2" hidden><h4>조치</h4><p>운영팀과 테이블 사용 여부를 확인한 뒤 해당 통계 테이블을 복제 대상에서 제외했습니다.</p></div>
-            <div role="tabpanel" id="c3p3" aria-labelledby="c3t3" hidden><h4>재발 방지</h4><p>복제 대상 테이블을 추가하거나 뺄 때 확인할 기준을 정리했습니다.</p><p>원인 분석 과정은 같은 유형의 부하를 빠르게 찾을 수 있도록 문서로 남겼습니다.</p></div>
+            <div role="tabpanel" id="c3p0" aria-labelledby="c3t0"><h4>현상</h4><p>매일 10시·18시 CPU가 평소 20%대에서 70%까지 상승</p><p>정확히 반복되는 시간 패턴으로 예약 작업 의심</p></div>
+            <div role="tabpanel" id="c3p1" aria-labelledby="c3t1" hidden><h4>원인 분석</h4><p>VPC Flow Logs로 해당 시각 DB 접속 출처 범위 축소</p><p>서버 33대 크론, DB 이벤트 스케줄러, 애플리케이션 스케줄러 순으로 후보 제거</p><p>마지막으로 남은 Lambda 배치 디컴파일, 월별 통계 약 2만 건 삭제 후 재적재 로직 확인</p><p>해당 대량 변경이 실시간 복제로 그대로 전달되어 부하 발생</p></div>
+            <div role="tabpanel" id="c3p2" aria-labelledby="c3t2" hidden><h4>조치</h4><p>운영팀과 테이블 사용 여부 확인 후 통계 테이블을 복제 대상에서 제외</p></div>
+            <div role="tabpanel" id="c3p3" aria-labelledby="c3t3" hidden><h4>재발 방지</h4><p>복제 대상 테이블 추가·제외 시 확인 기준 정리</p><p>원인 분석 과정 문서화</p></div>
           </div>
         </div>
         <footer class="inc-foot"><span>결과</span><ul><li>반복 부하 원인 제거</li><li>복제 대상 관리 기준 수립</li></ul></footer>
@@ -258,7 +258,7 @@
         </div>
         <div class="work-body">
           <h3>Aurora MySQL 업그레이드</h3>
-          <p>지원 종료로 늘어나던 연장 지원 비용을 없앴습니다.<br>매일 덤프하던 QA 동기화도 실시간 복제로 바꿨습니다.</p>
+          <p>지원 종료로 늘어나던 연장 지원 비용 제거<br>매일 덤프하던 QA 동기화를 실시간 복제로 전환</p>
           <ul class="facts"><li><b>100<span>%</span></b>연장 지원 비용 제거</li><li><b>실시간</b>QA 동기화</li></ul>
           <button class="more" data-pdf="docs/mysql-upgrade.pdf" data-title="MySQL 5.7 → 8.0 업그레이드">자세히 보기 →</button>
         </div>
@@ -272,7 +272,7 @@
         </div>
         <div class="work-body">
           <h3>GitOps 배포 플랫폼</h3>
-          <p>서버에 직접 밀어 넣던 배포를 GitOps로 바꿨습니다.<br>서비스마다 달랐던 파이프라인도 하나로 맞췄습니다.</p>
+          <p>서버에 직접 밀어 넣던 배포를 GitOps로 전환<br>서비스마다 달랐던 파이프라인 통일</p>
           <ul class="facts"><li><b>2<span> files</span></b>신규 서비스 배포</li><li><b>15<span>종</span></b>Terraform 모듈</li></ul>
           <button class="more" data-pdf="docs/case-studies.pdf" data-title="작업 사례">자세히 보기 →</button>
         </div>
@@ -285,7 +285,7 @@
         </div>
         <div class="work-body">
           <h3>모니터링 직접 구축</h3>
-          <p>상용 에이전트가 운영 서버 장애를 일으킨 뒤, 오픈소스로 모니터링을 다시 만들었습니다.<br>레거시 관제도 함께 대체했습니다.</p>
+          <p>상용 에이전트로 인한 운영 서버 장애 이후 오픈소스로 모니터링 재구축<br>레거시 관제 대체</p>
           <ul class="facts"><li><b>30<span>대</span></b>운영 서버 적용</li><li><b>포트 단위</b>장애 감지</li></ul>
           <button class="more" data-pdf="docs/case-studies.pdf" data-title="작업 사례">자세히 보기 →</button>
         </div>
