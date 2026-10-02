@@ -78,6 +78,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .stats div:last-child { border-right: 0; }
 .stats b { display: block; color: var(--ink); font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -.02em; }
 .stats b span { color: var(--accent); }
+.stats em { display: block; font: 700 12px var(--mono); letter-spacing: .14em; color: var(--accent); font-style: normal; margin-bottom: 6px; }
 .stats small { font-size: 14px; color: var(--muted); }
 
 /* 로고 띠 */
@@ -104,6 +105,10 @@ h3 { color: var(--ink); font-weight: 700; }
 .road .yr { font: 700 13px var(--mono); color: var(--muted); }
 .road h3 { font-size: 18px; margin: 10px 0 10px; }
 .road p { font-size: 15px; }
+.road .one { color: var(--ink); font-weight: 600; font-size: 16px; line-height: 1.5; }
+.chips { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.chips li { font-size: 13px; font-weight: 600; color: var(--text); background: var(--alt); padding: 3px 10px; border-radius: 999px; }
+.road .now .chips li { color: var(--accent); background: var(--accent-soft); }
 .road .now { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
 .road .now .yr { color: var(--accent); }
 
