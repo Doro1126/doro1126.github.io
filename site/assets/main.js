@@ -170,3 +170,26 @@ document.querySelectorAll('.doc-tabs, .gal-tabs').forEach((list) => {
     if (e.key === 'ArrowRight') { set(now + 5); e.preventDefault(); }
   });
 })();
+
+// 이메일 복사
+(() => {
+  const btn = document.getElementById('mail-copy');
+  const text = document.getElementById('mail-text');
+  if (!btn || !text) return;
+  btn.addEventListener('click', async () => {
+    const mail = text.textContent.trim();
+    try {
+      await navigator.clipboard.writeText(mail);
+    } catch {
+      // 클립보드 권한이 없는 환경에서는 주소를 선택 상태로 둔다.
+      const range = document.createRange();
+      range.selectNodeContents(text);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    btn.textContent = '복사됨';
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('done'); }, 1600);
+  });
+})();
