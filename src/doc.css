@@ -1,0 +1,37 @@
+/* 공개 문서 공용 스타일 (src/*.html → site/docs/*.pdf) */
+@page { size: A4; margin: 16mm 18mm 16mm; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Apple SD Gothic Neo", "Helvetica Neue", sans-serif; color: #1f2328; word-break: keep-all; font-size: 9.6pt; line-height: 1.7; }
+code { font-family: "SF Mono", Menlo, monospace; font-size: 8.6pt; background: #f3f4f6; padding: 0 1mm; border-radius: 1mm; }
+
+header { border-bottom: 2px solid #1f2328; padding-bottom: 4mm; margin-bottom: 2mm; }
+header .kind { font-size: 8.5pt; font-weight: 700; color: #ea580c; letter-spacing: 0.6pt; }
+header h1 { font-size: 19pt; font-weight: 800; letter-spacing: -0.4pt; margin: 1.5mm 0 2mm; line-height: 1.35; }
+header dl { display: grid; grid-template-columns: auto 1fr; gap: 0.5mm 4mm; font-size: 8.8pt; color: #555; }
+header dt { font-weight: 700; color: #333; }
+
+h2 { font-size: 12.5pt; font-weight: 800; margin: 7mm 0 2mm; padding-left: 2.5mm; border-left: 3px solid #ea580c; line-height: 1.3; break-after: avoid; }
+h3 { font-size: 10.2pt; font-weight: 700; margin: 4.5mm 0 1.2mm; break-after: avoid; }
+p { margin: 1mm 0; }
+ul, ol { padding-left: 5mm; margin: 1mm 0; }
+li { margin: 0.6mm 0; }
+li::marker { color: #9ca3af; }
+
+table { width: 100%; border-collapse: collapse; margin: 2mm 0; font-size: 8.8pt; line-height: 1.55; break-inside: avoid; }
+th, td { border: 1px solid #e1e4e8; padding: 1.6mm 2.6mm; text-align: left; vertical-align: top; }
+th { background: #f6f7f9; font-weight: 700; }
+td.num { white-space: nowrap; }
+
+/* 흐름도: 상자와 화살표만 */
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 1.6mm; margin: 2.5mm 0; font-size: 8.6pt; break-inside: avoid; }
+.flow span { border: 1px solid #d0d7de; border-radius: 1.2mm; padding: 1.2mm 2.4mm; background: #fafbfc; }
+.flow span.hl { border-color: #f5a46a; background: #fff6ef; }
+.flow i { font-style: normal; color: #ea580c; font-weight: 700; }
+.flow-label { font-size: 8.4pt; color: #666; margin-top: 2mm; }
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; break-inside: avoid; }
+.cols > div { border: 1px solid #e1e4e8; border-radius: 1.5mm; padding: 2.5mm 3.5mm; }
+.cols h3 { margin-top: 0; }
+
+.section { break-inside: avoid; }
+.fine { font-size: 8.2pt; color: #6b7280; margin-top: 6mm; border-top: 1px solid #e5e7eb; padding-top: 2mm; }

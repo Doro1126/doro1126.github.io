@@ -2,124 +2,142 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>Case Study · Aurora MySQL 5.7 → 8.0 업그레이드</title>
-<style>
-  @page { size: A4; margin: 0; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: "Helvetica Neue", "Apple SD Gothic Neo", sans-serif; color: #222; word-break: keep-all; }
-  .page { width: 210mm; height: 297mm; padding: 18mm 19mm 15mm; page-break-after: always; overflow: hidden; }
-  .page:last-child { page-break-after: auto; }
-  .eyebrow { font-size: 9pt; font-weight: 700; letter-spacing: 1.5pt; color: #2563eb; }
-  h1 { font-size: 20pt; font-weight: 800; margin: 2mm 0 2mm; letter-spacing: -0.4pt; }
-  .meta { font-size: 9.5pt; color: #666; padding-bottom: 5mm; border-bottom: 2px solid #222; }
-  h2 { font-size: 12.5pt; font-weight: 800; margin: 7mm 0 2.5mm; }
-  p, li { font-size: 9.6pt; line-height: 1.68; }
-  ul { padding-left: 4.5mm; } li { margin: 0.8mm 0; }
-  .note { margin-top: 3mm; font-size: 8.6pt; color: #777; }
-  .flow { display: flex; align-items: center; gap: 2mm; margin: 3mm 0 1mm; flex-wrap: wrap; }
-  .step { border: 1px solid #c9d3e6; background: #f4f7fc; border-radius: 1.5mm; padding: 2mm 3mm; font-size: 8.8pt; }
-  .arrow { color: #2563eb; font-weight: 700; }
-  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin-top: 3mm; }
-  .box { border: 1px solid #ddd; border-radius: 1.5mm; padding: 3mm 4mm; }
-  .box h3 { font-size: 9.6pt; margin-bottom: 1.5mm; }
-  .box.before { background: #fbf4f4; border-color: #ecc8c8; }
-  .box.after { background: #f2f9f4; border-color: #c4e3cc; }
-  .kpi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 3mm; }
-  .kpi div { border: 1px solid #ddd; border-radius: 1.5mm; padding: 4mm; text-align: center; }
-  .kpi b { display: block; font-size: 17pt; color: #2563eb; margin-bottom: 1mm; }
-  .kpi span { font-size: 8.8pt; color: #555; }
-  table { width: 100%; border-collapse: collapse; margin-top: 2.5mm; font-size: 8.8pt; }
-  th, td { border: 1px solid #ddd; padding: 2mm 3mm; text-align: left; vertical-align: top; line-height: 1.5; }
-  th { background: #f4f7fc; }
-  .foot { position: absolute; }
-</style>
+<title>Aurora MySQL 5.7 → 8.0 업그레이드</title>
+<link rel="stylesheet" href="doc.css">
 </head>
 <body>
 
-<section class="page">
-  <div class="eyebrow">CASE STUDY · DATABASE</div>
-  <h1>Aurora MySQL 5.7 → 8.0 업그레이드와 실시간 동기화 전환</h1>
-  <div class="meta">역할: DevOps (업그레이드 주도, 동기화 구조 설계·구축) · 기간: 약 4개월 · 환경: AWS Aurora MySQL, QA/운영 2개 환경</div>
+<header>
+  <div class="kind">DATABASE</div>
+  <h1>Aurora MySQL 5.7 → 8.0 업그레이드와<br>QA 실시간 동기화 전환</h1>
+  <dl>
+    <dt>역할</dt><dd>업그레이드 주도, QA 동기화 구조 설계와 구축 (성능 개선 일부는 개발팀과 협업)</dd>
+    <dt>기간</dt><dd>약 4개월 (테스트 환경 검증 약 3개월 포함)</dd>
+    <dt>환경</dt><dd>Aurora MySQL, QA와 운영 2개 환경, DMS Serverless</dd>
+  </dl>
+</header>
 
-  <h2>1. 배경</h2>
-  <ul>
-    <li>운영 중인 Aurora MySQL 5.7이 표준 지원 종료 버전이 되면서, 연장 지원(Extended Support) 비용이 RDS 전체 비용의 절반 이상을 차지하는 상태</li>
-    <li>QA 데이터는 매일 운영 Writer에서 mysqldump로 전체를 삭제 후 다시 적재하는 방식이라, 운영 DB 부하와 데이터 지연이 함께 발생</li>
-    <li>향후 서비스 단위 분리(MSA 전환)를 위해 안정적인 최신 DB 기반이 먼저 필요</li>
-  </ul>
+<h2>배경</h2>
+<ul>
+  <li>운영 DB가 표준 지원이 끝난 5.7 버전이라 연장 지원(Extended Support) 요금 발생. 월 DB 비용의 약 53%가 버전 유지 비용</li>
+  <li>QA 데이터는 매일 운영 Writer에서 전체 덤프 후 삭제·재적재하는 방식. 운영 DB 부하와 하루 단위 데이터 지연이 함께 발생</li>
+  <li>DB CPU 알람이 매일 울리는 상태라 업그레이드 전에 성능 문제부터 정리 필요</li>
+</ul>
 
-  <h2>2. 사전 검증</h2>
-  <ul>
-    <li><b>정적 분석</b>: MySQL Shell <code>checkForServerUpgrade</code>로 스키마를 사전 점검 (Fatal 0건, Warning 194건)</li>
-    <li><b>위험 분류</b>: 예약어 충돌, Zero Date 기본값, utf8mb3 → utf8mb4 전환, 인증 방식 변경 항목을 "8.0에서 깨지는가 / 8.4에서 깨지는가" 기준으로 우선순위화</li>
-    <li><b>선행 검증</b>: 테스트 환경을 먼저 8.0으로 올리고 서비스 동작을 확인한 뒤 운영에 반영</li>
-    <li><b>무영향 이관</b>: 스키마 이관은 Reader 엔드포인트에서 일관성 덤프로 수행해 Writer 부하 없이 처리</li>
-  </ul>
+<h2>진행 단계</h2>
+<table>
+  <tr><th style="width:22%">단계</th><th>내용</th><th style="width:16%">상태</th></tr>
+  <tr><td>성능 안정화</td><td>Reader 분산, 커넥션 풀 축소, 슬로우 쿼리 가시화와 튜닝, 덤프 배치 제거</td><td>완료</td></tr>
+  <tr><td>QA 업그레이드</td><td>레거시 QA DB 정리 후 QA Aurora 5.7 → 8.0.42</td><td>완료</td></tr>
+  <tr><td>운영 사전 준비</td><td>정적 분석, 스키마 정리, 파라미터 그룹, 점검 화면 리허설</td><td>완료</td></tr>
+  <tr><td>운영 업그레이드</td><td>운영 Aurora 5.7 → 8.0.42 (In-place)</td><td>완료</td></tr>
+  <tr><td>8.4 LTS 준비</td><td>정적 분석과 접속 계층 영향도 분석</td><td>분석까지 완료</td></tr>
+</table>
 
-  <h2>3. 운영 업그레이드 절차</h2>
-  <p>서비스 이용이 가장 적은 새벽 시간대에, 단계별 체크리스트와 담당자 분담표를 기준으로 진행했습니다.</p>
-  <div class="flow">
-    <span class="step">사전 공지</span><span class="arrow">→</span>
-    <span class="step">점검 화면 전환</span><span class="arrow">→</span>
-    <span class="step">스냅샷 백업</span><span class="arrow">→</span>
-    <span class="step">버전 충돌 요소 제거</span><span class="arrow">→</span>
-    <span class="step">5.7 → 8.0 업그레이드</span><span class="arrow">→</span>
-    <span class="step">서비스 검증 · 오픈</span>
+<h2>업그레이드 전 성능 안정화</h2>
+<table>
+  <tr><th style="width:30%">작업</th><th>결과</th><th style="width:18%">주체</th></tr>
+  <tr><td>읽기 트래픽을 미사용 Reader로 분산</td><td>Writer 집중 부하 감소</td><td>개발팀 협업</td></tr>
+  <tr><td>서비스별 커넥션 풀을 실사용량 기준으로 축소</td><td>전체 커넥션 1,450 → 303 (79% 감소)</td><td>개발팀 협업</td></tr>
+  <tr><td>3초 이상 쿼리를 CloudWatch와 Grafana로 가시화, 병목 공유 후 튜닝</td><td>QA Read DB CPU 피크 100% → 24%</td><td>가시화·검증 담당</td></tr>
+  <tr><td>운영 Writer 덤프 배치 중단, CDC로 대체</td><td>덤프 부하 제거, 동기화 1일 → 실시간</td><td>단독</td></tr>
+</table>
+
+<h2>사전 검증</h2>
+<h3>스키마 정적 분석</h3>
+<ul>
+  <li>MySQL Shell <code>util.checkForServerUpgrade()</code>로 스키마 점검. 5.7 → 8.0.42 기준 Fatal 0건, Warning 194건</li>
+  <li>항목을 "8.0에서 깨지는가 / 8.4에서 깨지는가" 기준으로 분류. 다음 메이저 업그레이드까지 고려한 우선순위</li>
+  <li>사용 중인 테이블 전수 조사 후 전체의 16% 삭제, 72% 수정</li>
+  <li>버전 충돌 요소 정리: 8.0 예약어(<code>ADMIN</code>)와 겹치는 컬럼명, utf8mb3 → utf8mb4, Zero Date 기본값, 8.0에서 동작이 바뀐 비밀번호 함수 쿼리</li>
+</ul>
+<h3>파라미터 그룹</h3>
+<ul>
+  <li>QA는 클러스터 파라미터 그룹만 커스텀, 운영은 인스턴스 파라미터 그룹에도 커스텀 값 존재. 놓치면 <code>max_connections</code> 등이 기본값으로 돌아가는 구조라 환경별로 따로 대조</li>
+  <li>8.0의 기본 collation 변경에 대비해 <code>character_set_server</code>, <code>collation_server</code> 명시. 신규 테이블과 기존 컬럼 간 collation 충돌 예방</li>
+</ul>
+
+<h2>운영 업그레이드</h2>
+<p>서비스 이용이 가장 적은 새벽 점검 창에서 진행. 계획한 종료 시각 전에 서비스 장애 없이 완료.</p>
+<div class="flow">
+  <span>사전 공지</span><i>→</i><span>점검 화면</span><i>→</i><span>스냅샷</span><i>→</i><span>충돌 제거</span><i>→</i><span>1차 확인</span><i>→</i><span class="hl">8.0.42</span><i>→</i><span>2차 확인</span><i>→</i><span>재개</span>
+</div>
+<ul>
+  <li>스크립트 실행 전과 버전 업그레이드 전에 스냅샷을 각각 확보</li>
+  <li>진행 중 터미널 로그, 커넥션 풀 그래프, 콘솔의 엔진 버전, 실제 접속 결과를 함께 확인</li>
+  <li>점검 화면은 로드밸런서 고정 응답으로 준비하고 QA에서 리허설. 앱과 웹이 공통으로 다르게 보내는 요청 헤더 1개로 분기해 앱에는 JSON, 웹에는 HTML 503 반환</li>
+  <li>고정 응답 본문 1024자 제한은 점검 이미지를 외부 저장소에 두고 참조하는 방식으로 해결</li>
+</ul>
+
+<h3>프리체크 실패 2회</h3>
+<table>
+  <tr><th style="width:16%">환경</th><th>원인</th><th style="width:30%">조치</th></tr>
+  <tr><td>QA</td><td>미사용 스키마의 컬럼 코멘트에 이모지 등 4바이트 문자 포함</td><td>미사용 스키마 삭제 후 재시도</td></tr>
+  <tr><td>운영</td><td>utf8mb3 코멘트 검사 12건 실패. <code>information_schema</code>에서는 코멘트가 빈 값인데 프리체크만 에러로 판정. 내부 딕셔너리에 남은 손상 바이트 문제(MySQL Bug #110177)</td><td>해당 테이블·컬럼 코멘트를 빈 값으로 재작성 후 재시도</td></tr>
+</table>
+<ul>
+  <li>콘솔에 상세 사유가 나오지 않아 Writer 인스턴스의 프리체크 로그를 CLI로 내려받아 에러 항목만 추출하는 절차 정리</li>
+  <li>프리체크 실패 시 클러스터가 5.7 상태로 남고 다운타임이 없다는 점 확인</li>
+  <li>완료 후 롤백은 스냅샷 복원뿐이고 엔드포인트가 바뀐다는 점을 사전에 공유. 5.7 → 8.0과 8.0 → 8.4는 묶지 않는 원칙</li>
+</ul>
+
+<h3>업그레이드 후 발견한 장애 2건</h3>
+<table>
+  <tr><th style="width:22%">증상</th><th>원인</th><th style="width:26%">조치</th></tr>
+  <tr><td>알림 API는 200인데 실제 발송 없음</td><td>발송 데몬의 2016년경 JDBC 드라이버가 접속 시 8.0에서 제거된 <code>query_cache_size</code> 변수를 조회하다 예외 발생</td><td>8.0 호환 드라이버로 교체</td></tr>
+  <tr><td>자동 배정 API 500 반복</td><td>8.0의 ICU 정규식 엔진에 새로 생긴 실행 시간 제한(<code>regexp_time_limit</code>, 기본 32ms) 초과</td><td>재부팅 없이 파라미터 조정. 쿼리 개선을 후속 과제로 등록</td></tr>
+</table>
+
+<h2>QA 동기화: 덤프 배치 → DMS CDC</h2>
+<div class="cols">
+  <div>
+    <h3>이전</h3>
+    <ul>
+      <li>운영 Writer에서 전체 덤프</li>
+      <li>하루 1회, 전체 삭제 후 재적재</li>
+      <li>셸 스크립트와 cron으로 관리</li>
+    </ul>
   </div>
-  <p class="note">점검 화면은 로드밸런서 고정 응답 방식으로 준비하고 QA에서 리허설했습니다. 앱과 웹을 요청 헤더 하나로 구분해 앱에는 JSON, 웹에는 HTML 점검 페이지를 반환하는 구조입니다.</p>
-
-  <h2>4. QA 동기화: 덤프 배치 → CDC 실시간 복제</h2>
-  <div class="compare">
-    <div class="box before"><h3>Before</h3><ul>
-      <li>운영 Writer에서 직접 덤프 (부하 높음)</li>
-      <li>1일 1회 스케줄러, 전체 삭제 후 적재</li>
-      <li>Shell Script + cron으로 관리</li></ul></div>
-    <div class="box after"><h3>After</h3><ul>
-      <li>binlog 기반 변경분만 복제 (부하 거의 없음)</li>
-      <li>실시간 동기화, 268개 테이블</li>
-      <li>DMS Serverless 관리형 서비스</li></ul></div>
+  <div>
+    <h3>이후</h3>
+    <ul>
+      <li>binlog 기반 변경분만 복제</li>
+      <li>실시간, 268개 테이블</li>
+      <li>DMS Serverless 관리형</li>
+    </ul>
   </div>
-  <ul style="margin-top:3mm">
-    <li>운영과 QA VPC 대역이 같아 Peering이 불가능 → QA DB를 다른 대역의 VPC로 옮긴 뒤 Peering 구성, 인터넷 경유 없이 복제</li>
-    <li>FK 제약, 중복 키, Lock 대기, 타임존 9시간 차이 등 트러블슈팅 6건을 원인과 조치로 문서화</li>
-  </ul>
-</section>
+</div>
+<ul>
+  <li>운영과 QA VPC 대역이 같아 Peering 불가. QA DB를 다른 대역 VPC로 옮긴 뒤 Peering과 DNS 해석 설정. 인터넷 경유 없이 복제</li>
+  <li>이관 과정에서 전체 개방돼 있던 QA DB 보안 그룹을 출처별 허용 목록으로 축소</li>
+  <li>트러블슈팅 6건 문서화: FK 제약, 중복 키, Lock 대기, DMS 세션 UTC로 인한 9시간 차이, 대형 테이블 제외 판단 등</li>
+  <li>DMS가 테이블·컬럼 코멘트를 복제하지 않는 제약 확인과 재동기화 절차 정리</li>
+  <li>업그레이드 다운타임 동안 CDC 지연이 최대 21분까지 늘었다가 자동 회복, 데이터 손실 없음</li>
+</ul>
 
-<section class="page">
-  <h2 style="margin-top:0">5. 운영 중 발견한 문제와 추적 과정</h2>
-  <table>
-    <tr><th style="width:26%">증상</th><th>추적 과정</th><th style="width:28%">조치</th></tr>
-    <tr><td>매일 같은 시각 QA DB CPU가 70%까지 상승</td>
-        <td>전체 서버 crontab → DB Event Scheduler → 애플리케이션 스케줄러 순으로 배제, 마지막으로 남은 Lambda 배치를 디컴파일해 월별 통계를 지우고 다시 쓰는 로직을 확인. 이 대량 변경이 CDC로 그대로 복제되며 부하를 만든 구조</td>
-        <td>운영팀 확인 후 해당 통계 테이블을 복제 대상에서 제외</td></tr>
-    <tr><td>QA Read DB CPU 피크 100%</td>
-        <td>장시간 Sleep 세션과 슬로우 쿼리 확인, 작은 인스턴스의 메모리 부족이 디스크 I/O와 CPU를 함께 끌어올리는 구조로 판단</td>
-        <td>슬로우 쿼리 튜닝·인덱스 개선, 인스턴스 Scale Up</td></tr>
-    <tr><td>QA Writer 커넥션 풀 부족</td>
-        <td>인스턴스 크기별 max_connections 한계 확인</td>
-        <td>Scale Up 후 Aurora 자동 failover로 바뀐 Writer/Reader 역할 원복</td></tr>
-  </table>
+<h2>8.4 LTS 준비 (분석까지 완료)</h2>
+<table>
+  <tr><th style="width:38%">8.4 변경</th><th>대응 방향</th></tr>
+  <tr><td>기본 인증 플러그인 파라미터 제거</td><td>신규 인증 정책 파라미터로 유지 또는 계정별 전환</td></tr>
+  <tr><td>TLS 1.2 CBC 계열 cipher 제거</td><td>GCM/CCM 계열로 재설정</td></tr>
+  <tr><td><code>thread_handling=thread-pools</code> 무효</td><td>커넥션 규모 실측 후 기본 방식으로 변경</td></tr>
+  <tr><td><code>require_secure_transport</code> 기본값 ON</td><td>파라미터로 유지 또는 클라이언트 TLS 전환</td></tr>
+</table>
+<ul>
+  <li>마지막 항목은 레거시 서비스 코드를 직접 확인해 비TLS 설정이 하드코딩된 서비스 6종과 DMS 엔드포인트를 영향 대상으로 확정</li>
+  <li>이 Aurora 환경에서는 DB 쪽에서 세션별 TLS 여부를 확인할 방법이 없어 클라이언트 설정 확인이 유일한 방법</li>
+</ul>
 
-  <h2>6. 결과</h2>
-  <div class="kpi">
-    <div><b>100%</b><span>Extended Support 비용 제거</span></div>
-    <div><b>57%</b><span>RDS 월 비용 절감<br>(유휴 DB 정리 포함)</span></div>
-    <div><b>1일 → 실시간</b><span>QA 데이터 동기화 주기</span></div>
-  </div>
-  <ul style="margin-top:4mm">
-    <li>운영 Writer 덤프 작업 제거로 운영 DB 부하 해소</li>
-    <li>QA Read DB CPU 피크 100% → 24%</li>
-  </ul>
+<h2>결과</h2>
+<table>
+  <tr><th style="width:40%">항목</th><th>결과</th></tr>
+  <tr><td>Extended Support 비용</td><td>100% 제거</td></tr>
+  <tr><td>RDS 월 비용</td><td>57% 절감 (유휴 DB 정리 포함)</td></tr>
+  <tr><td>QA 데이터 동기화</td><td>1일 1회 → 실시간</td></tr>
+  <tr><td>운영 Writer 덤프 부하</td><td>제거</td></tr>
+  <tr><td>외부 위탁</td><td>없음. 사내에서 계획과 수행</td></tr>
+</table>
 
-  <h2>7. 남긴 것</h2>
-  <ul>
-    <li><b>Phase별 체크리스트</b>: 테스트 환경 정리 → QA 업그레이드 → 운영 사전 점검 → 운영 업그레이드 → 8.4 LTS 준비까지 단계와 담당자를 문서로 정리</li>
-    <li><b>8.4 LTS 영향도 분석</b>: 인증 플러그인, TLS cipher, thread handling, 보안 연결 기본값 변경 등 접속 계층 위험 4건을 "파라미터 그룹으로 유지 / 클라이언트 전환" 두 안의 트레이드오프로 정리</li>
-    <li><b>DMS 운영 가이드</b>: 테이블 매핑 추가 절차, 코멘트 미복제 등 알려진 제약과 대응 방법</li>
-  </ul>
-
-  <p class="note" style="margin-top:8mm">※ 회사 정보 보호를 위해 회사명, 내부 호스트명, 금액은 제외하고 비율로만 표기했습니다.</p>
-</section>
-
+<p class="fine">공개용 문서. 회사명, 내부 서비스와 DB 이름, 호스트, 금액은 제외하고 비율로만 표기.</p>
 </body>
 </html>

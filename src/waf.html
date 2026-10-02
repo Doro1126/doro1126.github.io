@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>AWS WAF 고도화</title>
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+
+<header>
+  <div class="kind">SECURITY</div>
+  <h1>AWS WAF 고도화: 로그 분석 기반 Count → Block 전환</h1>
+  <dl>
+    <dt>역할</dt><dd>전임자에게 인수받은 WAF 운영, 로그 분석, 차단 전환, 오탐 대응, 일일 리포트 자동화</dd>
+    <dt>환경</dt><dd>AWS WAF v2 (ALB 2대, Web ACL 2개), CloudWatch Logs Insights, Lambda, EventBridge, Confluence API</dd>
+  </dl>
+</header>
+
+<h2>인수 시점 상태</h2>
+<ul>
+  <li>수동 IP 차단 규칙 1개만 Block. 관리형 규칙 그룹을 포함한 나머지 규칙은 모두 Count(탐지만)</li>
+  <li>규칙 9개, WCU 1428. 두 Web ACL이 같은 규칙 구성</li>
+  <li>최종 목표는 차단이지만 어떤 규칙을 켜면 어떤 정상 트래픽이 끊기는지 판단할 근거가 없는 상태</li>
+  <li>첫 과제를 Count 로그 기반 영향도 정량화로 설정</li>
+</ul>
+
+<h2>분석 방법</h2>
+<ul>
+  <li>Logs Insights로 Web ACL별 로그를 따로 집계. 트래픽 성격이 달라 두 Web ACL을 합산하지 않는 원칙</li>
+  <li>Count 상태 규칙 그룹도 <code>ruleGroupList[].terminatingRule</code>에 원래 차단했을 하위 규칙 ID가 남는 점을 이용해 하위 규칙 단위로 영향 산출</li>
+  <li>"지금 Block으로 바꾸면 끊길 요청"을 ALLOW + Count 매칭 조건으로 추출</li>
+  <li>헤더 배열 필터가 안 되는 제약은 상위 출처를 먼저 집계하고 해당 원본 로그만 소량 조회하는 2단계 방식으로 해결</li>
+  <li>모수가 작은 Web ACL(규칙 매칭 0.4%)보다 모수가 큰 쪽(매칭 84.4%)을 기준 분석 대상으로 선택</li>
+</ul>
+
+<h2>규칙별 판단</h2>
+<p>판단 기준: 정상 사용자나 내부 서비스가 섞였는지, 섞였다면 경로나 라벨로 예외 처리가 가능한지, 관찰 기간(1~3주) 동안 오탐이 없었는지.</p>
+<table>
+  <tr><th style="width:34%">규칙</th><th>매칭 성격</th><th style="width:26%">조치</th></tr>
+  <tr><td>국가 차단 (커스텀)</td><td>허용 국가 외 트래픽, 대부분 스캐너와 봇</td><td>1순위 Block</td></tr>
+  <tr><td>SQLiRuleSet</td><td>매칭 28건 전부 외부 스캐너의 공격 시도</td><td>Block</td></tr>
+  <tr><td>KnownBadInputs, LinuxRuleSet</td><td>취약 경로 탐색, 경로 순회 시도</td><td>Block</td></tr>
+  <tr><td>AmazonIpReputationList</td><td>7일 관찰 결과 매칭 전부 해외 취약점 스캔, 정상 사용자 0건</td><td>Block</td></tr>
+  <tr><td>CommonRuleSet</td><td>일부 하위 규칙에 정상 업로드와 에디터 입력 포함</td><td>그룹 Block, 하위 2종만 Count</td></tr>
+  <tr><td>AnonymousIpList, BotControl</td><td>내부 서비스 호출, 헬스체크, 파트너 앱 호출 포함</td><td>Count 유지</td></tr>
+</table>
+<ul>
+  <li>규칙 그룹 하나 때문에 그룹 전체를 포기하지 않도록, 문제 되는 하위 규칙만 <code>RuleActionOverrides</code>로 Count 처리하고 나머지는 Block</li>
+</ul>
+
+<h2>오탐 대응</h2>
+<p>오차단 6건은 대부분 파일 업로드와 multipart 요청에서 발생. 공격과 구분한 근거는 User-Agent, 세션, 경로 일관성, 변경 시점 전후 비교.</p>
+<table>
+  <tr><th style="width:30%">유형</th><th>원인</th><th style="width:30%">조치</th></tr>
+  <tr><td>바이너리 업로드가 경로 순회로 탐지</td><td>업로드 본문의 바이너리 구간이 LFI 시그니처와 일치, 1시간 40건 차단</td><td>IP 허용 방식이 유동 IP 파트너를 못 막아 경로 기반 예외로 전환</td></tr>
+  <tr><td>multipart 경계 문자열이 SQLi로 탐지</td><td>boundary와 Base64 패딩 문자 조합. 실제 사용자가 3회 재시도 후 실패</td><td>하위 규칙 Count, 업무 경로 제외 커스텀 규칙</td></tr>
+  <tr><td>앱 HTTP 라이브러리 교체 후 업로드 차단</td><td>boundary 형식이 바뀌어 본문이 SQL 주석과 비슷한 연속 문자로 시작</td><td>30일 로그를 교체 전후로 대조해 원인 확정, 라벨과 경로 조건 예외</td></tr>
+  <tr><td>사진 업로드 실패</td><td>XSS 본문 규칙 매칭</td><td>하위 규칙 Count, 본문 크기 상한 20MB → 30MB</td></tr>
+  <tr><td>사내 IP 업무 기능 403</td><td>같은 출처, 같은 요청의 Block 로그 확인</td><td>최우선순위 사내 IP 허용, 전용 알림 구축</td></tr>
+  <tr><td>앱스토어 심사 접속 차단</td><td>심사 접속 국가가 허용 국가 밖</td><td>국가 차단만 임시 Count. 원복 조건 기록</td></tr>
+</table>
+
+<h2>Custom Rule 6종</h2>
+<table>
+  <tr><th style="width:36%">규칙</th><th>목적</th></tr>
+  <tr><td>본문 크기 상한</td><td>관리형 8KB 기준 대신 서비스 현실에 맞는 상한 초과만 차단</td></tr>
+  <tr><td>경로 순회 예외</td><td>내부 업로드는 통과, 외부의 실제 공격은 계속 차단</td></tr>
+  <tr><td>SQLi 예외 (업무 경로)</td><td>파트너 업무 기능과 SQLi 차단 동시 유지</td></tr>
+  <tr><td>SQLi 예외 (모바일 업로드)</td><td>클라이언트 라이브러리 변경에 따른 재발 방지</td></tr>
+  <tr><td>SQLi 우회 패턴 보강 (Block)</td><td>관리형 규칙이 놓친 변형을 디코딩, 주석 제거, 공백 정리, 소문자화 후 정규식으로 차단</td></tr>
+  <tr><td>SQLi 고민감도 (Count)</td><td>차단 전 오탐률 측정용 탐지</td></tr>
+</table>
+<ul>
+  <li>보강 계기: 쿼리 파라미터를 돌아가며 시도하는 자동화 SQLi 공격 중 일부가 관리형 규칙을 통과해 오리진까지 도달한 기록을 오리진 접근 로그 대조로 확인</li>
+  <li>우회 패턴 규칙은 적용 전 24시간 정상 트래픽에 매칭 0건 확인 후 Block. 적용 후 오탐 0건</li>
+  <li>고민감도 규칙은 광고 유입 파라미터 오탐 7건이 확인돼 Block 보류</li>
+</ul>
+
+<h2>Block 전환 절차</h2>
+<div class="flow">
+  <span>로그 가시성</span><i>→</i><span>영향 정량화</span><i>→</i><span>전환 순서 설계</span><i>→</i><span>규칙별 관찰<br><small>1~3주</small></span><i>→</i><span>예외 처리</span><i>→</i><span class="hl">Block</span><i>→</i><span>회귀 감시</span>
+</div>
+<ul>
+  <li>순서: 의도된 차단(국가) → 오탐 낮은 공격 탐지 규칙 → 평판 기반 → 정상 트래픽이 섞인 규칙은 예외 처리 후</li>
+  <li>임시 완화(Count 전환)는 반드시 원복 조건과 함께 기록</li>
+</ul>
+
+<h2>리포트와 알림 자동화</h2>
+<ul>
+  <li>수동 HTML 보고서를 Lambda와 EventBridge로 자동화. 매일 자정 전날 24시간을 분석해 Confluence 페이지 생성</li>
+  <li>리포트 구성: 개요, 조치 필요 사항, Block 현황, Count 현황(전환 영향), 특수 사례, 공격 시도 요약, 국가 차단 요약</li>
+  <li>Count 규칙을 "예외 필요 / 검토 필요 / 전환 가능"으로 자동 분류. 공격 유형은 경로와 규칙 ID로 7가지 라벨 부여</li>
+  <li>허용 목록 IP가 차단될 때만 울리는 알림: Metric Filter → Alarm → EventBridge → Lambda가 최근 차단 상세를 조회해 메신저로 전송, 복구 시 해제 알림</li>
+</ul>
+
+<h2>결과</h2>
+<table>
+  <tr><th style="width:40%">항목</th><th>결과</th></tr>
+  <tr><td>규칙 구성</td><td>9개 → 15개 (Custom Rule 6종 포함)</td></tr>
+  <tr><td>Block 전환</td><td>국가 차단, 요청 빈도 제한, KnownBadInputs, SQLi, Linux, Common(하위 2종 제외), IP 평판</td></tr>
+  <tr><td>오탐</td><td>6건 원인 규명 후 규칙 재설계</td></tr>
+  <tr><td>리포트</td><td>매일 자동 생성</td></tr>
+</table>
+<p>전환 후 차단 급증 알림 2건은 모두 평판 규칙이 해외 스캐너를 막은 결과로 확인. 서비스 영향 없음.</p>
+
+<h3>남은 작업</h3>
+<ul>
+  <li>AnonymousIpList, BotControl 전환 (내부 호출 허용 목록 선행)</li>
+  <li>임시 Count로 둔 국가 차단 원복, 두 Web ACL 간 규칙 구성 통일</li>
+</ul>
+
+<p class="fine">공개용 문서. Web ACL과 로드밸런서 이름, IP, 예외 경로와 조건값, 도메인은 제외하고 목적만 표기.</p>
+</body>
+</html>

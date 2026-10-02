@@ -98,8 +98,8 @@
   go(0);
 })();
 
-// 보고서 항목 탭 (현상 / 원인 분석 / 조치 / 재발 방지)
-document.querySelectorAll('.doc-tabs').forEach((list) => {
+// 탭 묶음: 보고서 항목(현상 / 원인 분석 / 조치 / 재발 방지), 아키텍처 갤러리
+document.querySelectorAll('.doc-tabs, .gal-tabs').forEach((list) => {
   const tabs = list.querySelectorAll('[role="tab"]');
   tabs.forEach((t) => t.addEventListener('click', () => {
     tabs.forEach((x) => {
@@ -110,3 +110,63 @@ document.querySelectorAll('.doc-tabs').forEach((list) => {
     });
   }));
 });
+
+// 아키텍처 이미지 라이트박스: data-img 요소를 누르면 원본 크기로 본다.
+(() => {
+  const dlg = document.getElementById('imgbox');
+  if (!dlg) return;
+  const img = document.getElementById('imgbox-img');
+  const title = document.getElementById('imgbox-title');
+  const openTab = document.getElementById('imgbox-open');
+  let opener = null;
+
+  document.querySelectorAll('[data-img]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const src = btn.dataset.img;
+      if (typeof dlg.showModal !== 'function') { window.open(src, '_blank', 'noopener'); return; }
+      opener = btn;
+      title.textContent = btn.dataset.title || '';
+      openTab.href = src;
+      img.src = src;
+      img.alt = btn.querySelector('img')?.alt || '';
+      dlg.showModal();
+    });
+  });
+
+  document.getElementById('imgbox-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('close', () => { img.removeAttribute('src'); if (opener) opener.focus(); });
+})();
+
+// 수동 · 자동 비교 슬라이더: 사용자가 끌 때만 움직인다.
+(() => {
+  const root = document.querySelector('.split');
+  if (!root) return;
+  const handle = root.querySelector('.split-handle');
+  let dragging = false;
+
+  const set = (pct) => {
+    const v = Math.min(100, Math.max(0, pct));   // 한쪽을 완전히 덮을 수 있게 0~100
+    root.style.setProperty('--x', `${v}%`);
+    handle.setAttribute('aria-valuenow', Math.round(v));
+  };
+  const fromEvent = (e) => {
+    const r = root.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    set((x / r.width) * 100);
+  };
+
+  handle.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    handle.setPointerCapture(e.pointerId);
+    root.classList.add('dragging');
+  });
+  handle.addEventListener('pointermove', (e) => { if (dragging) fromEvent(e); });
+  handle.addEventListener('pointerup', () => { dragging = false; root.classList.remove('dragging'); });
+  root.addEventListener('click', (e) => { if (e.target !== handle) fromEvent(e); });
+  handle.addEventListener('keydown', (e) => {
+    const now = parseFloat(root.style.getPropertyValue('--x')) || 50;
+    if (e.key === 'ArrowLeft') { set(now - 5); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { set(now + 5); e.preventDefault(); }
+  });
+})();

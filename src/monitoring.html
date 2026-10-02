@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>모니터링 체계 재구축</title>
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+
+<header>
+  <div class="kind">OBSERVABILITY</div>
+  <h1>레거시 관제 대체와<br>Prometheus · Grafana · Loki 모니터링 구축</h1>
+  <dl>
+    <dt>역할</dt><dd>대안 검증, 설계, 운영 서버 30대 적용, 알림 체계 설계</dd>
+    <dt>환경</dt><dd>EC2 기반 운영 서버, Prometheus, Grafana, Loki(S3), Promtail, Node Exporter, Blackbox Exporter, AWS SSM, Terraform</dd>
+  </dl>
+</header>
+
+<h2>배경</h2>
+<ul>
+  <li>기존 관제는 Logstash, JDBC, 자체 웹앱으로 만든 사내 시스템. 서버 1대에서 단독 동작, 디스크 사용률 92%</li>
+  <li>서비스가 죽었는지는 "수집 실패" 알람으로만 간접 확인. 에러 로그는 앱이 직접 HTTP로 보내는 방식</li>
+  <li>대체 후보로 상용 APM을 시험 적용하던 중 에이전트 기능 활성화 직후 운영 6대와 QA 2대에서 OOM Kill 발생</li>
+  <li>운영 서버 다수가 메모리 1GB급 소형 인스턴스이고 대부분 Swap 없음. 다음 날 상용 APM 에이전트 전면 철수 결정</li>
+</ul>
+
+<h2>대안 비교</h2>
+<table>
+  <tr><th style="width:36%">수집 에이전트</th><th style="width:24%">실측 메모리</th><th>판단</th></tr>
+  <tr><td>Node Exporter + Promtail</td><td class="num">약 80MB</td><td>채택. 관리 대상은 2개로 늘지만 장애 위험이 낮음</td></tr>
+  <tr><td>Grafana Alloy (통합 에이전트)</td><td class="num">235~255MB</td><td>제외. 소형 인스턴스에 부담</td></tr>
+</table>
+<ul>
+  <li>모니터링 스택 자체도 실측. 필요 메모리 약 5GB 산정 후 모니터링 서버를 계획보다 한 단계 큰 타입으로 결정</li>
+  <li>QA에서 먼저 구축하고 같은 버전과 설정 형식으로 운영에 적용</li>
+</ul>
+
+<h2>구조</h2>
+<div class="flow">
+  <span>운영 서버 30대<br><small>Node Exporter, Promtail</small></span><i>→</i><span>Prometheus<br><small>15초 수집, 30일 보관</small></span><i>→</i><span class="hl">Grafana<br><small>대시보드, Alerting</small></span><i>→</i><span>알림 채널</span>
+</div>
+<div class="flow">
+  <span>Promtail</span><i>→</i><span>Loki<br><small>S3 저장, 30일 보관</small></span><i>→</i><span class="hl">Grafana</span>
+  &nbsp;&nbsp;
+  <span>Blackbox Exporter<br><small>앱 포트 TCP 확인</small></span><i>→</i><span>Prometheus</span>
+  &nbsp;&nbsp;
+  <span>CloudWatch<br><small>RDS 지표</small></span><i>→</i><span>Grafana</span>
+</div>
+<ul>
+  <li>모니터링 서버는 공인 IP 없는 사설 서브넷에 배치. Docker Compose로 4개 컨테이너 구성, 컨테이너별 CPU와 메모리 상한 지정</li>
+  <li>Loki 저장소는 로컬 디스크 대신 S3. 접근은 액세스 키 없이 인스턴스 프로파일로 처리</li>
+  <li>수집 포트는 모니터링 서버의 보안 그룹만 출처로 허용 (전체 대역 개방 없음)</li>
+</ul>
+
+<h2>서비스 DOWN 감지</h2>
+<ul>
+  <li>"수집이 끊기면 알림" 대신 운영 서버 30대의 앱 포트 40여 개를 Blackbox Exporter로 직접 TCP 확인. <code>probe_success == 0</code>이면 DOWN</li>
+  <li>알림에 서버와 서비스 라벨을 함께 붙여 어느 서버의 어떤 앱인지 바로 식별</li>
+  <li>대상 목록은 3가지로 교차 확인: <code>ss -tlnp</code>의 리스닝 포트와 PID, 프로세스 작업 디렉터리, 프로세스 관리 도구 상태와 인프라 문서</li>
+</ul>
+
+<h2>알림 설계</h2>
+<h3>기존 기준 역추적</h3>
+<ul>
+  <li>레거시 관제의 이벤트 13종, 임계치, 알림 채널, 발송 시간대(평일 주간만)를 먼저 조사해 Grafana 규칙과 1:1 매핑표 작성 후 전환</li>
+  <li>임계치 단계는 3단계 → 2단계로 축소</li>
+</ul>
+<h3>규칙 7종</h3>
+<table>
+  <tr><th style="width:26%">분류</th><th>조건</th><th style="width:18%">수준</th></tr>
+  <tr><td>리소스</td><td>CPU, 메모리, 디스크 각 90% 초과</td><td>critical</td></tr>
+  <tr><td>에러 로그</td><td>5분간 애플리케이션 에러 로그 1건 이상 (LogQL)</td><td>warning</td></tr>
+  <tr><td>서비스 DOWN</td><td>앱 포트 TCP 확인 실패</td><td>critical</td></tr>
+  <tr><td>RDS</td><td>CPU 70% / 90% 초과 (CloudWatch 직접 조회)</td><td>warning / critical</td></tr>
+</table>
+<h3>알림 피로 관리</h3>
+<ul>
+  <li>Contact Point를 복구 알림이 필요한 것과 필요 없는 것으로 분리. <code>type</code> 라벨 4종으로 라우팅</li>
+  <li>에러 로그 알림은 10분 반복 억제, 복구 알림 없음</li>
+  <li>이미 에러가 상시 발생하는 서버 2대는 원인 정리 전까지 에러 로그 알림에서 제외</li>
+  <li>알림 메시지에 서버 이름, 현재 값, 해당 서버가 선택된 대시보드 링크 포함</li>
+  <li>WARN 알림은 LogQL 템플릿으로 표준화. 서비스 이름만 바꿔 추가하는 방식</li>
+  <li>새 알림은 테스트 채널에서 검증 후 운영 채널로 이동. SSM으로 테스트 로그 주입 → 수집 → 알림 발생 → 수신까지 끝에서 끝으로 확인</li>
+</ul>
+
+<h2>배포와 자동화</h2>
+<ul>
+  <li>AWS SSM Run Command로 운영 30대에 일괄 설치. 설치, 서비스 등록, 설정, 활성화, 확인 순서 고정</li>
+  <li>Promtail 시작 전에 <code>positions.yaml</code> 오프셋을 미리 기록해 과거 로그 전체가 다시 수집되는 문제 예방</li>
+  <li>운영 서버 로그 경로를 전수 조사해 공통 규칙 도출. 미사용 서비스와 HA 유틸리티 로그는 수집 제외</li>
+  <li>서버별 로그 대시보드는 Terraform으로 생성. Loki API에서 현재 로그를 보내는 서버 목록을 받아 <code>for_each</code>로 만들고, UID 고정과 <code>overwrite = false</code>로 기존 대시보드 보호</li>
+</ul>
+
+<h2>운영 중 문제와 해결</h2>
+<table>
+  <tr><th style="width:30%">문제</th><th>해결</th></tr>
+  <tr><td>Grafana 신버전에서 Terraform 대시보드 배포 실패 (루트 <code>id</code> 거부)</td><td>프로바이더 상향과 클래식 JSON 형식 템플릿으로 전환</td></tr>
+  <tr><td>로그 파일 약 3,000개가 쌓인 서버에서 Promtail 메모리 206MB</td><td>해당 서버는 메트릭만 수집하도록 예외 처리</td></tr>
+  <tr><td>파일 로그 없이 journald만 쓰고 디스크가 작은 서버 2대</td><td>로그 수집 보류, 메트릭만 수집</td></tr>
+  <tr><td>설치 전 디스크 92~97% 서버 존재</td><td>설치 전 정리 대상으로 분류해 적용 범위 결정</td></tr>
+  <tr><td>CLI 조회 결과가 일부만 나와 서버 수 오인</td><td>페이지네이션과 필터 수정 후 운영 VPC 전체 43대 확인</td></tr>
+</table>
+
+<h2>결과</h2>
+<table>
+  <tr><th style="width:30%">항목</th><th>이전</th><th>이후</th></tr>
+  <tr><td>수집 주기</td><td>60초 폴링</td><td>15초 수집</td></tr>
+  <tr><td>서비스 DOWN 감지</td><td>수집 실패로 간접 확인</td><td>앱 포트 단위 직접 확인</td></tr>
+  <tr><td>에러 감지</td><td>앱이 직접 전송</td><td>Loki 쿼리 기반</td></tr>
+  <tr><td>대시보드 추가</td><td>화면에서 수동 복제</td><td>Terraform으로 자동 생성</td></tr>
+  <tr><td>로그 저장</td><td>관제 서버 로컬</td><td>Loki + S3</td></tr>
+  <tr><td>적용 범위</td><td>-</td><td>운영 서버 30대, 앱 포트 40여 개</td></tr>
+</table>
+<p>레거시 관제는 구조 분석과 문서화 후 삭제.</p>
+
+<h3>남은 작업</h3>
+<ul>
+  <li>프론트엔드(SPA) 모니터링 (Grafana Faro 검토)</li>
+  <li>예외 처리한 서버의 로그 수집 재검토</li>
+</ul>
+
+<p class="fine">공개용 문서. 회사명, 서버 이름, 주소, 알림 채널 이름은 제외하고 일반화해 표기.</p>
+</body>
+</html>

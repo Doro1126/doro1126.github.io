@@ -18,7 +18,7 @@
   <div class="wrap">
     <a href="#" class="logo">seonho<span class="accent">.</span>dev</a>
     <nav aria-label="섹션 이동">
-      <a href="#story">걸어온 길</a><a href="#how">문제 해결</a><a href="#work">대표 작업</a><a href="#docs">문서</a>
+      <a href="#story">걸어온 길</a><a href="#how">문제 해결</a><a href="#work">대표 작업</a><a href="#auto">자동화</a><a href="#docs">문서</a>
     </nav>
     <button class="cta" data-pdf="docs/career.pdf" data-title="경력기술서">경력기술서</button>
   </div>
@@ -104,7 +104,6 @@
           </div>
         </div>
       </div>
-      <figcaption class="mock-cap">직접 구축한 GitOps 배포 환경을 단순화해 재현한 화면</figcaption>
     </figure>
   </div>
 </section>
@@ -246,50 +245,122 @@
 <section id="work" class="section reveal">
   <div class="wrap">
     <p class="eyebrow">대표 작업</p>
-    <h2>직접 맡아서<br><span class="accent">끝까지</span> 해낸 일</h2>
-    <p class="sub">준비부터 운영 반영, 그 뒤의 문서화까지 직접 책임진 작업들입니다.</p>
-    <div class="works">
-      <article class="work">
-        <div class="flow" aria-hidden="true">
-          <span class="node">MySQL 5.7<small>지원 종료</small></span><span class="arrow">→</span>
-          <span class="node">정적 분석<small>호환성 점검</small></span><span class="arrow">→</span>
-          <span class="node new">MySQL 8.0<small>QA → 운영</small></span>
-        </div>
-        <div class="work-body">
-          <h3>Aurora MySQL 업그레이드</h3>
-          <p>지원 종료로 늘어나던 연장 지원 비용 제거<br>매일 덤프하던 QA 동기화를 실시간 복제로 전환</p>
-          <ul class="facts"><li><b>100<span>%</span></b>연장 지원 비용 제거</li><li><b>실시간</b>QA 동기화</li></ul>
-          <button class="more" data-pdf="docs/mysql-upgrade.pdf" data-title="MySQL 5.7 → 8.0 업그레이드">자세히 보기 →</button>
-        </div>
-      </article>
-      <article class="work">
-        <div class="flow" aria-hidden="true">
-          <span class="node">Jenkins<small>CI</small></span><span class="arrow">→</span>
-          <span class="node">Nexus<small>Artifact</small></span><span class="arrow">→</span>
-          <span class="node">ArgoCD<small>GitOps</small></span><span class="arrow">→</span>
-          <span class="node new">EKS<small>Deploy</small></span>
-        </div>
-        <div class="work-body">
-          <h3>GitOps 배포 플랫폼</h3>
-          <p>서버에 직접 밀어 넣던 배포를 GitOps로 전환<br>서비스마다 달랐던 파이프라인 통일</p>
-          <ul class="facts"><li><b>2<span> files</span></b>신규 서비스 배포</li><li><b>15<span>종</span></b>Terraform 모듈</li></ul>
-          <button class="more" data-pdf="docs/case-studies.pdf" data-title="작업 사례">자세히 보기 →</button>
-        </div>
-      </article>
-      <article class="work">
-        <div class="flow" aria-hidden="true">
-          <span class="node">Exporter<small>메트릭·로그</small></span><span class="arrow">→</span>
-          <span class="node">Prometheus<small>Loki</small></span><span class="arrow">→</span>
-          <span class="node new">Grafana<small>Alert → Slack</small></span>
-        </div>
-        <div class="work-body">
-          <h3>모니터링 직접 구축</h3>
-          <p>상용 에이전트로 인한 운영 서버 장애 이후 오픈소스로 모니터링 재구축<br>레거시 관제 대체</p>
-          <ul class="facts"><li><b>30<span>대</span></b>운영 서버 적용</li><li><b>포트 단위</b>장애 감지</li></ul>
-          <button class="more" data-pdf="docs/case-studies.pdf" data-title="작업 사례">자세히 보기 →</button>
-        </div>
-      </article>
+    <h2>직접 설계한<br><span class="accent">배포 · 운영 구조</span></h2>
+    <p class="sub">세대가 다른 CI/CD를 차례로 설계하고 운영했습니다.</p>
+    <div class="gal">
+      <div class="gal-tabs" role="tablist" aria-label="아키텍처 목록">
+        <button role="tab" class="on" aria-selected="true" aria-controls="arch-1">서버 직접 배포</button>
+        <button role="tab" aria-selected="false" aria-controls="arch-2">컨테이너 전환</button>
+        <button role="tab" aria-selected="false" aria-controls="arch-3">GitOps 배포</button>
+        <button role="tab" aria-selected="false" aria-controls="arch-4">멀티 클러스터</button>
+        <button role="tab" aria-selected="false" aria-controls="arch-5">DB 실시간 동기화</button>
+        <button role="tab" aria-selected="false" aria-controls="arch-6">모니터링</button>
+      </div>
+
+      <figure class="arch" id="arch-1" role="tabpanel">
+        <button class="arch-img" data-img="img/cicd-as-is.png" data-title="서버 직접 배포 (개선 전)">
+          <img src="img/cicd-as-is.png" alt="Jenkins가 SSH로 애플리케이션 서버에 직접 배포하는 구조" loading="lazy">
+          <span class="zoom">크게 보기</span>
+        </button>
+        <figcaption>
+          <h3>서버 직접 배포 <em>개선 전</em></h3>
+          <p>Jenkins가 SSH로 서버에 접속해 산출물 전달<br>서비스마다 다른 배포 스크립트, 되돌리기 어려운 구조</p>
+        </figcaption>
+      </figure>
+
+      <figure class="arch" id="arch-2" role="tabpanel" hidden>
+        <button class="arch-img" data-img="img/cicd-to-be.png" data-title="컨테이너 전환">
+          <img src="img/cicd-to-be.png" alt="Gradle·Docker 빌드 산출물을 Nexus에 게시하고 Kubernetes로 배포하는 구조" loading="lazy">
+          <span class="zoom">크게 보기</span>
+        </button>
+        <figcaption>
+          <h3>컨테이너 전환</h3>
+          <p>빌드 산출물을 Nexus에 게시하고 컨테이너로 배포<br>빌드와 배포 분리, Multi-stage 빌드로 이미지 경량화</p>
+        </figcaption>
+      </figure>
+
+      <figure class="arch" id="arch-3" role="tabpanel" hidden>
+        <button class="arch-img" data-img="img/cicd-gitops.png" data-title="GitOps 배포 파이프라인">
+          <img src="img/cicd-gitops.png" alt="Jenkins가 이미지 태그를 커밋하고 ArgoCD가 변경을 감지해 EKS에 동기화하는 구조" loading="lazy">
+          <span class="zoom">크게 보기</span>
+        </button>
+        <figcaption>
+          <h3>GitOps 배포</h3>
+          <p>Jenkins가 이미지 태그를 커밋하고 ArgoCD가 변경을 감지해 EKS에 동기화<br>신규 서비스 추가는 설정 파일 2개</p>
+          <ul class="facts"><li><b>2<span> files</span></b>신규 서비스 배포</li><li><b>16<span>종</span></b>공용 라이브러리</li></ul>
+        </figcaption>
+      </figure>
+
+      <figure class="arch" id="arch-4" role="tabpanel" hidden>
+        <button class="arch-img" data-img="img/cicd-argocd.png" data-title="멀티 클러스터 배포">
+          <img src="img/cicd-argocd.png" alt="DevOps 계정의 ArgoCD 한 곳에서 QA와 운영 EKS 클러스터로 배포하는 구조" loading="lazy">
+          <span class="zoom">크게 보기</span>
+        </button>
+        <figcaption>
+          <h3>멀티 클러스터</h3>
+          <p>ArgoCD 한 곳에서 QA · 운영 클러스터로 배포<br>운영 배포는 승인 게이트 통과 후 진행</p>
+          <ul class="facts"><li><b>15<span>종</span></b>Terraform 모듈</li><li><b>승인 게이트</b>운영 배포 통제</li></ul>
+        </figcaption>
+      </figure>
+
+      <figure class="arch" id="arch-5" role="tabpanel" hidden>
+        <button class="arch-img" data-img="img/db-sync.png" data-title="DB 실시간 동기화">
+          <img src="img/db-sync.png" alt="Database Migration Service와 VPC Peering으로 운영 DB를 QA DB에 실시간 복제하는 구조" loading="lazy">
+          <span class="zoom">크게 보기</span>
+        </button>
+        <figcaption>
+          <h3>DB 실시간 동기화</h3>
+          <p>매일 덤프하던 QA 동기화를 관리형 복제로 전환<br>Aurora MySQL 8.0 업그레이드로 연장 지원 비용 제거</p>
+          <ul class="facts"><li><b>57<span>%</span></b>RDS 월 비용 절감</li><li><b>268<span>개</span></b>테이블 실시간 복제</li></ul>
+        </figcaption>
+      </figure>
+
+      <figure class="arch" id="arch-6" role="tabpanel" hidden>
+        <button class="arch-img" data-img="img/monitoring.png" data-title="모니터링 스택">
+          <img src="img/monitoring.png" alt="Node Exporter와 Promtail로 수집한 지표·로그를 Prometheus와 Loki로 모아 Grafana에서 보는 구조" loading="lazy">
+          <span class="zoom">크게 보기</span>
+        </button>
+        <figcaption>
+          <h3>모니터링</h3>
+          <p>상용 에이전트 장애 이후 오픈소스로 재구축<br>TCP probe로 서비스 단위 장애 감지</p>
+          <ul class="facts"><li><b>30<span>대</span></b>운영 서버 적용</li><li><b>포트 단위</b>서비스 UP · DOWN</li></ul>
+        </figcaption>
+      </figure>
     </div>
+  </div>
+</section>
+
+<!-- 자동화 -->
+<section id="auto" class="section reveal">
+  <div class="wrap">
+    <p class="eyebrow">자동화</p>
+    <h2>손으로 하던 일은<br><span class="accent">도구에</span> 넘겼습니다</h2>
+    <p class="sub hint">가운데 손잡이를 좌우로 끌어 보세요.</p>
+
+    <div class="split" style="--x:50%">
+      <div class="split-pane manual">
+        <div class="split-head"><span class="tag">수동</span><h3>사람 손에 묶여 있던 일</h3></div>
+        <ul>
+          <li><b>서버에 접속해 배포</b><span>서비스마다 다른 스크립트</span></li>
+          <li><b>야간 덤프 후 적재</b><span>다음 날 데이터로 테스트</span></li>
+          <li><b>쌓인 이미지 직접 삭제</b><span>디스크가 찰 때마다 대응</span></li>
+          <li><b>로그 열어 확인 후 전파</b><span>알아차릴 때까지 지연</span></li>
+        </ul>
+      </div>
+      <div class="split-pane auto">
+        <div class="split-head"><span class="tag">자동</span><h3>도구가 대신 하는 일</h3></div>
+        <ul>
+          <li><b>커밋 한 번으로 배포</b><span>설정 파일 2개로 서비스 추가</span></li>
+          <li><b>관리형 CDC로 실시간 복제</b><span>테이블 268개</span></li>
+          <li><b>파이프라인 끝단에서 정리</b><span>디스크 70% → 29%</span></li>
+          <li><b>조건 감지 후 Slack 알림</b><span>서버 30대 상시 감시</span></li>
+        </ul>
+      </div>
+      <button class="split-handle" role="slider" tabindex="0" aria-label="수동과 자동 비교"
+              aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">⟨ ⟩</button>
+    </div>
+
+    <p class="ai-line">반복되는 분석과 조립은 AI에 맡기고, 판단과 검증은 직접 합니다.</p>
   </div>
 </section>
 
@@ -326,6 +397,14 @@
     <span><a id="viewer-open" target="_blank" rel="noopener">새 탭에서 열기</a><button id="viewer-close" aria-label="닫기">✕</button></span>
   </div>
   <iframe id="viewer-frame" title="PDF 문서"></iframe>
+</dialog>
+
+<dialog id="imgbox" aria-labelledby="imgbox-title">
+  <div class="viewer-bar">
+    <strong id="imgbox-title"></strong>
+    <span><a id="imgbox-open" target="_blank" rel="noopener">새 탭에서 열기</a><button id="imgbox-close" aria-label="닫기">✕</button></span>
+  </div>
+  <div class="imgbox-body"><img id="imgbox-img" alt=""></div>
 </dialog>
 
 <script src="assets/main.js"></script>

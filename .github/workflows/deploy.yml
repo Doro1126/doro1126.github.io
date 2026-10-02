@@ -40,6 +40,14 @@ jobs:
             echo "::error::sensitive string found in site/"; exit 1
           fi
 
+      # 이미지에 draw.io 원본 XML(편집 가능한 메타데이터)이 남아 있는지 확인
+      - name: Guard against embedded diagram source
+        run: |
+          set -euo pipefail
+          if grep -rl --binary-files=text -E 'mxfile|mxGraphModel|zipdoc' site; then
+            echo "::error::diagram metadata or internal name found in site/"; exit 1
+          fi
+
   deploy:
     needs: check
     runs-on: ubuntu-latest
