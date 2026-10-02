@@ -46,12 +46,10 @@
 <ul>
   <li>원자 함수 7개: checkout, 이미지 빌드, push, 이미지 정리, GitOps values 갱신, ArgoCD sync, 알림. 함수끼리 서로 호출하지 않는 구조</li>
   <li>조합 템플릿 4개: QA 자동 배포, 운영 빌드, 운영 배포(수동 승인), 수동 검증용</li>
-  <li>새 요구는 조합 템플릿에서 처리하고 원자 함수는 유지. 앱 서비스 8개와 공용 라이브러리 16종에 적용</li>
   <li>운영은 Build와 Deploy Job 분리. Deploy가 실행 시점에 Nexus의 최신 태그를 직접 조회하고 승인 게이트를 거치는 구조</li>
-  <li>승인 대기는 executor 밖에서 처리. 승인 대기 2건이 QA 빌드까지 막는 문제 예방</li>
 </ul>
 
-<h2>Terraform과 ArgoCD 관리 경계 정립</h2>
+<h2 class="pb">Terraform과 ArgoCD 관리 경계 정립</h2>
 <p>기준: 쿠버네티스 API 밖이면 Terraform, 안이면 ArgoCD. 예외는 부트스트랩뿐.</p>
 <table>
   <tr><th style="width:38%">리소스</th><th>이전</th><th>이후</th></tr>
@@ -62,8 +60,6 @@
   <tr><td>ArgoCD 계정과 RBAC</td><td>Terraform patch</td><td>ArgoCD selfHeal (부분 소유)</td></tr>
 </table>
 <ul>
-  <li>계기: Traefik 모듈이 apply 시점에만 알 수 있는 값을 <code>for_each</code> 키로 써서 상류 모듈이 바뀔 때마다 plan 자체가 실패</li>
-  <li>CRD의 <code>last-applied-configuration</code> 어노테이션이 한계의 95%(248KB)까지 찬 상태</li>
   <li>이관 순서: Application 추가(자동 sync 없이) → diff로 동일 확인 → <code>terraform state rm</code> → 수동 sync로 인수 → 기능 검증. destroy 미사용</li>
   <li>결과: <code>terraform plan</code> No changes, Application 16개 Synced/Healthy, 어노테이션 248KB → 0, 서비스 중단 없음</li>
 </ul>
@@ -82,44 +78,14 @@
   <li>IAM은 서비스 전체 권한 정책 대신 서비스별 역할과 실제 호출 액션만 허용</li>
 </ul>
 
-<h2>제어면 Fargate 분리</h2>
-<ul>
-  <li>ArgoCD, Karpenter, CoreDNS, ALB Controller를 Fargate로 이동. 워크로드 노드가 모두 사라져도 배포 도구가 살아 있는 구조</li>
-  <li>계획을 뒤집은 순서: 노드 CPU requests가 이미 85~90%라 requests부터 올리면 Karpenter가 노드를 추가로 띄우는 상황. Fargate 프로파일을 먼저 만들어 새 파드가 처음부터 Fargate에 뜨도록 변경</li>
-  <li>ALB Controller는 replica 2로 늘린 뒤 이동. webhook 엔드포인트가 0이 되면 클러스터 전체 Ingress 변경이 막히는 구조라서</li>
-  <li>결과: 앱 파드 재시작 0건, 노드 교체 0건, ArgoCD UI 중단 없음</li>
-  <li>전환 근거는 안정성이 아니라 제어면과 데이터플레인 분리로 기록. Fargate는 OS 패치 재시작 시점을 AWS가 정한다는 점도 함께 명시</li>
-</ul>
-
-<h2>운영 중 문제와 해결</h2>
-<table>
-  <tr><th style="width:22%">문제</th><th>원인</th><th style="width:34%">해결</th></tr>
-  <tr><td>이미지 태그 덮어쓰기</td><td>Job 재생성 시 빌드 번호가 1로 리셋</td><td><code>환경-날짜-빌드번호-커밋SHA8</code> 태그와 OCI 라벨. 운영 레지스트리는 삭제 권한 없음</td></tr>
-  <tr><td>Nexus 디스크 100%로 push 실패</td><td>"최근 N개 보존" 기능 미지원, 업로드 임시 blob 누적, Compact 작업 미등록</td><td>4단 삭제 체인 규명, 파이프라인 끝에 보존 정리(안전장치 6종), Nexus 스케줄로 회수</td></tr>
-  <tr><td>동시 빌드 실패</td><td>서비스 간 Gradle 캐시 공유로 lock 경합, GitOps 동시 push 충돌</td><td>서비스별 캐시 격리, fetch 후 재적용 재시도(최대 3회, 이후 실패 처리)</td></tr>
-  <tr><td>Helm upgrade 후 ArgoCD 권한 소실</td><td>차트 기본값의 빈 <code>policy.csv</code>가 기존 정책을 덮어씀. 관리자는 RBAC를 우회해 발견이 늦음</td><td>GitOps로 이관 후 일부러 망가뜨려 25초 내 자동 복구 확인. AppProject로 권한 분리</td></tr>
-  <tr><td>Poll SCM 무한 재빌드</td><td>파이프라인이 체크아웃한 GitOps 저장소가 폴링 대상에 자동 포함되고, 매 실행 커밋이 다시 빌드를 유발</td><td>보조 저장소는 <code>git clone</code>으로 받아 앱 소스만 폴링</td></tr>
-  <tr><td>새 공용 라이브러리 미반영</td><td>Gradle이 SNAPSHOT 갱신을 24시간에 1회만 확인</td><td>확인 주기 0초로 변경, 빌드 캐시는 유지</td></tr>
-  <tr><td>파드 간 호출 타임아웃(8~10초)</td><td>클러스터 내부에서 공개 도메인 호출 시 LB 헤어핀 트래픽이 버려짐</td><td>서버 간 호출은 내부 주소, 브라우저 진입점만 공개 도메인</td></tr>
-</table>
-
 <h2>결과</h2>
 <table>
   <tr><th style="width:40%">항목</th><th>결과</th></tr>
   <tr><td>신규 서비스 배포</td><td>설정 파일 2개 추가</td></tr>
   <tr><td>파이프라인</td><td>원자 함수 7개, 조합 템플릿 4개로 서비스 8개와 공용 라이브러리 16종 통일</td></tr>
   <tr><td>Terraform 모듈</td><td>커스텀 모듈 15종</td></tr>
-  <tr><td>Nexus 디스크</td><td>70% → 29% (약 20GB 회수)</td></tr>
   <tr><td>프론트엔드 이미지</td><td>1.09GB → 292MB (Multi-stage 빌드, standalone 출력)</td></tr>
-  <tr><td>태그·레지스트리 전환</td><td>서비스 8개, 파드 16개 재시작 0건</td></tr>
 </table>
-
-<h3>남은 작업</h3>
-<ul>
-  <li>운영 환경 클러스터와 IaC 구성 (진행 중)</li>
-  <li>GitOps 저장소 직접 push로 승인 게이트를 우회할 수 있는 경로 차단 (보호 브랜치 설계 필요)</li>
-  <li>노드 정의(NodePool)의 ArgoCD 이관 검토</li>
-</ul>
 
 </body>
 </html>

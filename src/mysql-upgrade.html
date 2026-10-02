@@ -31,7 +31,6 @@
   <tr><td>QA 업그레이드</td><td>레거시 QA DB 정리 후 QA Aurora 5.7 → 8.0.42</td><td>완료</td></tr>
   <tr><td>운영 사전 준비</td><td>정적 분석, 스키마 정리, 파라미터 그룹, 점검 화면 리허설</td><td>완료</td></tr>
   <tr><td>운영 업그레이드</td><td>운영 Aurora 5.7 → 8.0.42 (In-place)</td><td>완료</td></tr>
-  <tr><td>8.4 LTS 준비</td><td>정적 분석과 접속 계층 영향도 분석</td><td>분석까지 완료</td></tr>
 </table>
 
 <h2>업그레이드 전 성능 안정화</h2>
@@ -47,7 +46,6 @@
 <h3>스키마 정적 분석</h3>
 <ul>
   <li>MySQL Shell <code>util.checkForServerUpgrade()</code>로 스키마 점검. 5.7 → 8.0.42 기준 Fatal 0건, Warning 194건</li>
-  <li>항목을 "8.0에서 깨지는가 / 8.4에서 깨지는가" 기준으로 분류. 다음 메이저 업그레이드까지 고려한 우선순위</li>
   <li>사용 중인 테이블 전수 조사 후 전체의 16% 삭제, 72% 수정</li>
   <li>버전 충돌 요소 정리: 8.0 예약어(<code>ADMIN</code>)와 겹치는 컬럼명, utf8mb3 → utf8mb4, Zero Date 기본값, 8.0에서 동작이 바뀐 비밀번호 함수 쿼리</li>
 </ul>
@@ -78,7 +76,7 @@
 <ul>
   <li>콘솔에 상세 사유가 나오지 않아 Writer 인스턴스의 프리체크 로그를 CLI로 내려받아 에러 항목만 추출하는 절차 정리</li>
   <li>프리체크 실패 시 클러스터가 5.7 상태로 남고 다운타임이 없다는 점 확인</li>
-  <li>완료 후 롤백은 스냅샷 복원뿐이고 엔드포인트가 바뀐다는 점을 사전에 공유. 5.7 → 8.0과 8.0 → 8.4는 묶지 않는 원칙</li>
+  <li>완료 후 롤백은 스냅샷 복원뿐이고 엔드포인트가 바뀐다는 점을 사전에 공유</li>
 </ul>
 
 <h3>업그레이드 후 발견한 장애 2건</h3>
@@ -88,7 +86,7 @@
   <tr><td>자동 배정 API 500 반복</td><td>8.0의 ICU 정규식 엔진에 새로 생긴 실행 시간 제한(<code>regexp_time_limit</code>, 기본 32ms) 초과</td><td>재부팅 없이 파라미터 조정. 쿼리 개선을 후속 과제로 등록</td></tr>
 </table>
 
-<h2>QA 동기화: 덤프 배치 → DMS CDC</h2>
+<h2 class="pb">QA 동기화: 덤프 배치 → DMS CDC</h2>
 <div class="cols">
   <div>
     <h3>이전</h3>
@@ -109,23 +107,8 @@
 </div>
 <ul>
   <li>운영과 QA VPC 대역이 같아 Peering 불가. QA DB를 다른 대역 VPC로 옮긴 뒤 Peering과 DNS 해석 설정. 인터넷 경유 없이 복제</li>
-  <li>이관 과정에서 전체 개방돼 있던 QA DB 보안 그룹을 출처별 허용 목록으로 축소</li>
-  <li>트러블슈팅 6건 문서화: FK 제약, 중복 키, Lock 대기, DMS 세션 UTC로 인한 9시간 차이, 대형 테이블 제외 판단 등</li>
   <li>DMS가 테이블·컬럼 코멘트를 복제하지 않는 제약 확인과 재동기화 절차 정리</li>
   <li>업그레이드 다운타임 동안 CDC 지연이 최대 21분까지 늘었다가 자동 회복, 데이터 손실 없음</li>
-</ul>
-
-<h2>8.4 LTS 준비 (분석까지 완료)</h2>
-<table>
-  <tr><th style="width:38%">8.4 변경</th><th>대응 방향</th></tr>
-  <tr><td>기본 인증 플러그인 파라미터 제거</td><td>신규 인증 정책 파라미터로 유지 또는 계정별 전환</td></tr>
-  <tr><td>TLS 1.2 CBC 계열 cipher 제거</td><td>GCM/CCM 계열로 재설정</td></tr>
-  <tr><td><code>thread_handling=thread-pools</code> 무효</td><td>커넥션 규모 실측 후 기본 방식으로 변경</td></tr>
-  <tr><td><code>require_secure_transport</code> 기본값 ON</td><td>파라미터로 유지 또는 클라이언트 TLS 전환</td></tr>
-</table>
-<ul>
-  <li>마지막 항목은 레거시 서비스 코드를 직접 확인해 비TLS 설정이 하드코딩된 서비스 6종과 DMS 엔드포인트를 영향 대상으로 확정</li>
-  <li>이 Aurora 환경에서는 DB 쪽에서 세션별 TLS 여부를 확인할 방법이 없어 클라이언트 설정 확인이 유일한 방법</li>
 </ul>
 
 <h2>결과</h2>
