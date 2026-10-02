@@ -70,7 +70,7 @@
       <div class="summary">SSH 직접 배포 방식을 GitOps로 전환하고 Jenkins 공용 라이브러리 기반으로 서비스별 파이프라인 통일</div>
       <ul class="points">
         <li>Jenkins Shared Library를 공통 함수와 템플릿 단위로 설계 및 파이프라인 표준화</li>
-        <li>App-of-Apps GitOps 구조로 신규 서비스 배포를 설정 파일 2개 추가로 단축</li>
+        <li>App-of-Apps GitOps 구조로 신규 서비스 배포 절차를 설정 파일 2개 추가로 단축</li>
         <li>운영 배포는 Build/Deploy 분리 및 승인 게이트 구조로 설계</li>
         <li>이미지 태그 규칙 수립 및 Nexus 이미지 정리 자동화로 태그 덮어쓰기와 디스크 부족 문제 개선</li>
         <li>Jenkins 정규식 기반 RBAC 정비 및 ArgoCD AppProject 단위 개발자 권한 분리</li>
@@ -89,7 +89,7 @@
       <ul class="points">
         <li>EKS(Karpenter, Fargate) 신규 플랫폼 구축 및 Terraform 커스텀 모듈 15종 작성</li>
         <li>AWS는 Terraform, 쿠버네티스는 ArgoCD로 나눠 Terraform/ArgoCD 관리 경계 정립</li>
-        <li>ArgoCD와 ALB Controller를 Fargate로 분리해 서비스 노드와 무중단 분리</li>
+        <li>ArgoCD와 ALB Controller를 Fargate로 옮겨 서비스 노드와 무중단 분리</li>
         <li>Prometheus, Grafana, Loki 기반 모니터링 구축으로 레거시 관제 대체, 운영 서버 30대 적용</li>
         <li>Blackbox Exporter 기반 서비스 DOWN 감지 및 Slack 알림 체계 수립</li>
         <li>Private Hosted Zone과 내부 NLB로 레거시 서버와 신규 서비스 간 통신 구성</li>
@@ -109,13 +109,13 @@
     <div class="name">AWS WAF 차단 정책 운영 및 시크릿 관리 개선</div>
     <div>
       <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 04 ~ 현재</span></div>
-      <div class="summary">리뉴얼 오픈 이후 WAF 규칙의 단계적 차단 전환 및 소스 코드 내 자격증명 정리</div>
+      <div class="summary">리뉴얼 오픈 이후 WAF 규칙의 단계적 차단 전환 및 소스 코드 내 자격 증명 정리</div>
       <ul class="points">
         <li>오탐 가능성이 낮은 규칙부터 관찰 기간을 달리해 Count → Block 단계 전환</li>
         <li>Label, Path, Regex, BodySize 기반 Custom Rule 6종 설계, 오탐 원인 분석 후 예외 처리</li>
         <li>사내 IP 차단 시 상세 내역을 Slack으로 전달하는 알림 연동</li>
         <li>Pod Identity·ESO로 AWS 키·DB 비밀번호 제거, 시크릿/설정값 분리 표준 수립</li>
-        <li>Root 계정 MFA 적용 및 전체 개방 보안그룹 정리</li>
+        <li>Root 계정 MFA 적용 및 전체 개방 보안 그룹 정리</li>
       </ul>
       <div class="stack"><span class="stack-label">사용 기술</span>AWS WAF, CloudWatch, EventBridge, Lambda, Pod Identity, ESO</div>
     </div>
@@ -145,7 +145,7 @@
       <ul class="points">
         <li>VPC Flow Logs, CloudWatch 지표, DNS 연결 상태 교차 확인 후 미사용 DB·유휴 LB·스테이징 환경 정리</li>
         <li>레거시 서버 종료 전 nginx 설정과 의존성 확인, 헬스체크 경로 분리로 무중단 종료</li>
-        <li>삭제 대상 데이터 S3 백업 및 리소스 의존 관계 역순의 삭제 절차 정리</li>
+        <li>삭제 대상 데이터 S3 백업 및 리소스 의존 관계 역순으로 삭제 절차 정리</li>
         <li>MSP 재계약을 통해 기존보다 유리한 할인 조건 확보</li>
         <li>DB 업그레이드와 리소스 정리를 함께 진행해 RDS 월 비용 57% 절감</li>
       </ul>
