@@ -57,6 +57,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .mock-title { display: flex; justify-content: space-between; align-items: center; color: var(--ink); font-weight: 700; }
 .mock-title small { font-weight: 500; color: var(--muted); }
 .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.kpis.two { grid-template-columns: repeat(2, 1fr); }
 .kpis div { border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
 .kpis em { font-style: normal; color: var(--muted); font-size: 11px; }
 .kpis b { display: block; color: var(--ink); font-size: 18px; }
@@ -214,8 +215,8 @@ dialog iframe { flex: 1; width: 100%; border: 0; }
 .mock-main[hidden] { display: none; }
 .mock-main { animation: fade .25s ease; }
 @keyframes fade { from { opacity: 0; transform: translateY(4px); } }
-.stages { display: flex; flex-wrap: wrap; gap: 6px; }
-.stages span { font: 600 11px var(--mono); padding: 6px 8px; border-radius: 6px; background: #ecfdf3; color: var(--ok); }
+.stages { display: flex; flex-wrap: nowrap; gap: 6px; }
+.stages span { font: 600 11px var(--mono); padding: 6px 8px; border-radius: 6px; background: #ecfdf3; color: var(--ok); white-space: nowrap; }
 .stages span::before { content: "✓ "; }
 .spark { display: flex; align-items: flex-end; gap: 4px; height: 92px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; }
 .spark i { flex: 1; background: linear-gradient(var(--accent), #fbb68a); border-radius: 3px 3px 0 0; opacity: .85; }
