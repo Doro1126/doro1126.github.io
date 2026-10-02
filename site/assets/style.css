@@ -245,3 +245,25 @@ dialog iframe { flex: 1; width: 100%; border: 0; }
   .nav-btn { position: absolute; top: -64px; width: 40px; height: 40px; font-size: 22px; }
   .nav-btn.prev { right: 52px; } .nav-btn.next { right: 0; }
 }
+
+/* 장애 보고서 (컨플루언스 문서 스타일) */
+.doc-type { font-size: 13px; font-weight: 700; color: var(--ink); background: var(--alt); border: 1px solid var(--line); padding: 3px 10px; border-radius: 6px; }
+.inc-meta { grid-template-columns: repeat(3, 1fr); }
+.doc-body { display: grid; grid-template-columns: 180px 1fr; min-height: 280px; }
+.doc-tabs { display: flex; flex-direction: column; gap: 4px; padding: 18px 12px; border-right: 1px solid var(--line); background: #fbfbfc; }
+.doc-tabs button { text-align: left; padding: 10px 14px; border-radius: 10px; font-size: 15px; font-weight: 600; color: var(--text); transition: background .15s, color .15s; }
+.doc-tabs button:hover { background: #fff; color: var(--ink); }
+.doc-tabs button.on { background: #fff; color: var(--accent); box-shadow: inset 3px 0 0 var(--accent), 0 1px 3px rgba(17,19,24,.06); }
+.doc-panels { padding: 26px 32px; }
+.doc-panels [role="tabpanel"] { animation: fade .25s ease; }
+.doc-panels h4 { color: var(--ink); font-size: 17px; margin-bottom: 12px; }
+.doc-panels p { font-size: 16px; margin-bottom: 8px; }
+.track { align-items: flex-start; }
+@media (max-width: 640px) {
+  .doc-body { grid-template-columns: 1fr; }
+  .doc-tabs { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  .doc-tabs button { white-space: nowrap; }
+  .doc-panels { padding: 20px; }
+}
+
+.doc-type.imp { color: #2563eb; background: #eff4ff; border-color: #dbe5ff; }

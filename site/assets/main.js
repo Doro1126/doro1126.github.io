@@ -75,12 +75,10 @@
   });
 
   function go(n) {
-    i = Math.max(0, Math.min(slides.length - 1, n));
+    i = (n + slides.length) % slides.length;   // 양 끝에서 반대편으로 순환
     track.style.transform = `translateX(-${i * 100}%)`;
     slides.forEach((s, k) => s.setAttribute('aria-hidden', k !== i));
     [...dots.children].forEach((d, k) => d.setAttribute('aria-selected', k === i));
-    prev.disabled = i === 0;
-    next.disabled = i === slides.length - 1;
   }
   prev.addEventListener('click', () => go(i - 1));
   next.addEventListener('click', () => go(i + 1));
@@ -99,3 +97,16 @@
   });
   go(0);
 })();
+
+// 보고서 항목 탭 (현상 / 원인 분석 / 조치 / 재발 방지)
+document.querySelectorAll('.doc-tabs').forEach((list) => {
+  const tabs = list.querySelectorAll('[role="tab"]');
+  tabs.forEach((t) => t.addEventListener('click', () => {
+    tabs.forEach((x) => {
+      const on = x === t;
+      x.classList.toggle('on', on);
+      x.setAttribute('aria-selected', on);
+      document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+    });
+  }));
+});
