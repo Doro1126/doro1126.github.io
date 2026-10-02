@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>김선호 · DevOps Engineer</title>
-<meta name="description" content="서비스가 멈추지 않고, 팀이 더 쉽게 배포할 수 있는 인프라를 만드는 DevOps 엔지니어 김선호">
+<meta name="description" content="서비스가 멈추지 않고, 개발자가 더 쉽게 배포할 수 있는 인프라를 만드는 DevOps 엔지니어 김선호">
 <meta property="og:title" content="김선호 · DevOps Engineer">
 <meta property="og:description" content="AWS, Kubernetes, Terraform, GitOps 기반 인프라 구축과 운영">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -15,66 +15,133 @@
 <a class="skip" href="#story">본문으로 건너뛰기</a>
 
 <header class="top">
-  <a href="#" class="logo">seonho<span>.dev</span></a>
-  <nav aria-label="섹션 이동">
-    <a href="#story">소개</a><a href="#how">문제 해결</a><a href="#work">대표 작업</a><a href="#contact">연락</a>
-  </nav>
+  <div class="wrap">
+    <a href="#" class="logo">seonho<span class="accent">.</span>dev</a>
+    <nav aria-label="섹션 이동">
+      <a href="#story">걸어온 길</a><a href="#how">문제 해결</a><a href="#work">대표 작업</a><a href="#docs">문서</a>
+    </nav>
+    <button class="cta" data-pdf="docs/career.pdf" data-title="경력기술서">경력기술서</button>
+  </div>
 </header>
 
-<!-- 1. HERO -->
+<!-- HERO -->
 <section class="hero">
-  <div class="wrap hero-grid">
+  <div class="wrap">
     <div>
-      <h1>안녕하세요,<br>DevOps 엔지니어 <em>김선호</em>입니다.</h1>
+      <h1>안녕하세요,<br>DevOps 엔지니어<br><span class="accent">김선호</span>입니다.</h1>
       <p class="lead">서비스가 멈추지 않고, 개발자가 더 쉽게 배포할 수 있는 인프라를 만듭니다.</p>
+      <div class="hero-actions">
+        <a class="cta dark" href="mailto:kimseonho1126@gmail.com">연락하기</a>
+        <a class="cta ghost" href="#work">대표 작업 보기 →</a>
+      </div>
     </div>
-    <figure class="loop" aria-hidden="true">
-      <svg viewBox="0 0 400 200">
-        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#60a5fa"/></linearGradient></defs>
-        <path class="track-path" d="M200 100 C 140 20, 40 20, 40 100 S 140 180, 200 100 S 360 20, 360 100 S 260 180, 200 100 Z"/>
-        <path class="flow-path" d="M200 100 C 140 20, 40 20, 40 100 S 140 180, 200 100 S 360 20, 360 100 S 260 180, 200 100 Z"/>
-        <text x="110" y="106">DEV</text><text x="290" y="106">OPS</text>
-      </svg>
+
+    <figure>
+      <div class="mock" aria-hidden="true">
+        <div class="mock-bar"><i></i><i></i><i></i><span>argocd · applications</span></div>
+        <div class="mock-body">
+          <div class="mock-side">
+            <b>Platform</b>
+            <span class="on">Applications</span><span>Pipelines</span><span>Monitoring</span><span>Cost</span>
+          </div>
+          <div class="mock-main">
+            <div class="mock-title">배포 현황 <small>QA · 실시간</small></div>
+            <div class="kpis">
+              <div><em>Synced</em><b>16/16</b></div>
+              <div><em>배포 단위</em><b>2 files</b></div>
+              <div><em>재시작</em><b>0</b></div>
+            </div>
+            <div class="apps">
+              <div>account-api<span class="pill sync">Synced</span><span class="pill heal">Healthy</span></div>
+              <div>notification<span class="pill sync">Synced</span><span class="pill heal">Healthy</span></div>
+              <div>web-frontend<span class="pill run">Syncing</span><span class="pill heal">Healthy</span></div>
+            </div>
+            <div class="chat">새 서비스 배포하려면 뭐가 필요해?</div>
+            <div class="chat bot">Application.yaml, values.yaml 두 개면 됩니다.</div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="mock-cap">직접 구축한 GitOps 배포 환경을 단순화해 재현한 화면</figcaption>
     </figure>
   </div>
-
 </section>
 
-<!-- 2. 이야기 -->
-<section id="story" class="section reveal">
-  <div class="wrap narrow">
-    <p class="eyebrow">01 · 걸어온 길</p>
-    <h2>항공사 서비스직에서 DevOps까지</h2>
-    <ol class="path">
-      <li>
-        <span class="year">2023</span>
-        <div><h3>항공 예약·발권</h3>
-        <p>예측할 수 없는 상황에서도 침착하게 판단하는 법을 배웠습니다.<br>지금도 장애가 나면 먼저 상황을 정리하고 움직입니다.</p></div>
-      </li>
-      <li>
-        <span class="year">2024</span>
-        <div><h3>클라우드 엔지니어로 전환</h3>
-        <p>클라우드 엔지니어 양성과정에서 인프라와 DevOps를 처음부터 익혔습니다.<br>팀장으로 프로젝트를 이끌어 우수인재상을 받았습니다.</p></div>
-      </li>
-      <li>
-        <span class="year">2025</span>
-        <div><h3>그루핀 · DevOps</h3>
-        <p>퍼블릭 클라우드와 사내 서버가 함께 있는 하이브리드 인프라를 운영했습니다.<br>인프라 코드화, 접근 보안, 서비스 메시, 로그 체계까지 운영 기반 전반을 개선했습니다.</p></div>
-      </li>
-      <li class="now">
-        <span class="year">2026</span>
-        <div><h3>집닥 · DevOps</h3>
-        <p>레거시 인프라를 대체할 신규 플랫폼을 구축하고 있습니다.<br>DB 업그레이드, 비용 최적화, 보안, 배포 표준화, 모니터링까지 인프라 전반을 맡고 있습니다.</p></div>
-      </li>
-    </ol>
+<!-- 숫자 -->
+<section class="stats" aria-label="주요 성과">
+  <div class="wrap">
+    <div><b>57<span>%</span></b><small>RDS 월 비용 절감</small></div>
+    <div><b>15<span>종</span></b><small>Terraform 커스텀 모듈</small></div>
+    <div><b>2<span> files</span></b><small>신규 서비스 배포 단위</small></div>
+    <div><b>30<span>대</span></b><small>운영 서버 모니터링 적용</small></div>
   </div>
 </section>
 
-<!-- 3. 일하는 방식 -->
+<!-- 도구 로고 띠 -->
+<div class="marquee" aria-label="주로 쓰는 도구">
+  <ul>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="">AWS</li>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/kubernetes/kubernetes-original.svg" alt="">Kubernetes</li>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/terraform/terraform-original.svg" alt="">Terraform</li>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/argocd/argocd-original.svg" alt="">ArgoCD</li>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/jenkins/jenkins-original.svg" alt="">Jenkins</li>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/helm/helm-original.svg" alt="">Helm</li>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/prometheus/prometheus-original.svg" alt="">Prometheus</li>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/grafana/grafana-original.svg" alt="">Grafana</li>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/docker/docker-original.svg" alt="">Docker</li>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/mysql/mysql-original.svg" alt="">MySQL</li>
+    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/githubactions/githubactions-original.svg" alt="">GitHub Actions</li>
+    <!-- 끊김 없이 흐르도록 한 번 더 -->
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="">AWS</li>
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/kubernetes/kubernetes-original.svg" alt="">Kubernetes</li>
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/terraform/terraform-original.svg" alt="">Terraform</li>
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/argocd/argocd-original.svg" alt="">ArgoCD</li>
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/jenkins/jenkins-original.svg" alt="">Jenkins</li>
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/helm/helm-original.svg" alt="">Helm</li>
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/prometheus/prometheus-original.svg" alt="">Prometheus</li>
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/grafana/grafana-original.svg" alt="">Grafana</li>
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/docker/docker-original.svg" alt="">Docker</li>
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/mysql/mysql-original.svg" alt="">MySQL</li>
+    <li aria-hidden="true"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/githubactions/githubactions-original.svg" alt="">GitHub Actions</li>
+  </ul>
+</div>
+
+<!-- 걸어온 길 -->
+<section id="story" class="section reveal">
+  <div class="wrap">
+    <p class="eyebrow">걸어온 길</p>
+    <h2>항공사 서비스직에서<br><span class="accent">DevOps</span>까지</h2>
+    <p class="sub">일하는 무대는 바뀌었지만, 서비스가 멈추지 않게 지키는 일은 그대로입니다.</p>
+    <div class="road">
+      <article>
+        <span class="yr">2023</span>
+        <h3>항공 예약·발권</h3>
+        <p>예측할 수 없는 상황에서도 침착하게 판단하는 법을 배웠습니다.<br>지금도 장애가 나면 먼저 상황을 정리하고 움직입니다.</p>
+      </article>
+      <article>
+        <span class="yr">2024</span>
+        <h3>클라우드 엔지니어로 전환</h3>
+        <p>클라우드 엔지니어 양성과정에서 인프라와 DevOps를 처음부터 익혔습니다.<br>팀장으로 프로젝트를 이끌어 우수인재상을 받았습니다.</p>
+      </article>
+      <article>
+        <span class="yr">2025</span>
+        <h3>그루핀 · DevOps</h3>
+        <p>퍼블릭 클라우드와 사내 서버가 함께 있는 하이브리드 인프라를 운영했습니다.<br>인프라 코드화, 접근 보안, 서비스 메시, 로그 체계까지 운영 기반 전반을 개선했습니다.</p>
+      </article>
+      <article class="now">
+        <span class="yr">2026 · 현재</span>
+        <h3>집닥 · DevOps</h3>
+        <p>레거시 인프라를 대체할 신규 플랫폼을 구축하고 있습니다.<br>DB 업그레이드, 비용 최적화, 보안, 배포 표준화, 모니터링까지 인프라 전반을 맡고 있습니다.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 문제 해결 -->
 <section id="how" class="section alt reveal">
   <div class="wrap">
-    <p class="eyebrow">02 · 문제를 푸는 방식</p>
-    <h2>장애 하나를 끝까지 따라간 기록</h2>
+    <p class="eyebrow">문제를 푸는 방식</p>
+    <h2>장애 하나를<br><span class="accent">끝까지</span> 따라간 기록</h2>
+    <p class="sub">증상만 막으면 같은 일이 다시 생깁니다.<br>그래서 원인을 찾을 때까지 후보를 하나씩 지워 갑니다.</p>
 
     <article class="incident" aria-label="장애 분석 기록">
       <header class="inc-head">
@@ -107,104 +174,83 @@
   </div>
 </section>
 
-<!-- 4. 대표 작업 -->
+<!-- 대표 작업 -->
 <section id="work" class="section reveal">
   <div class="wrap">
-    <p class="eyebrow">03 · 대표 작업</p>
-    <h2>직접 맡아서 끝까지 해낸 일</h2>
-
-    <article class="feature">
-      <div class="flow">
-        <div class="node old">MySQL 5.7<small>지원 종료</small></div>
-        <div class="arrow"></div>
-        <div class="node">정적 분석<small>호환성 점검</small></div>
-        <div class="arrow"></div>
-        <div class="node new">MySQL 8.0<small>QA → 운영</small></div>
-      </div>
-      <div class="feature-body">
-        <h3>Aurora MySQL 5.7 → 8.0 업그레이드</h3>
-        <p>지원 종료로 늘어나던 연장 지원 비용을 없앴고, 매일 운영 DB를 덤프하던 QA 동기화를 실시간 복제로 바꿨습니다.</p>
-        <ul class="facts"><li><b>100%</b>연장 지원 비용 제거</li><li><b>1일→실시간</b>QA 동기화</li></ul>
-        <button class="link" data-pdf="docs/mysql-upgrade.pdf" data-title="MySQL 5.7 → 8.0 업그레이드">자세히 보기 →</button>
-      </div>
-    </article>
-
-    <article class="feature">
-      <div class="flow">
-        <div class="node">Jenkins<small>CI</small></div>
-        <div class="arrow"></div>
-        <div class="node">Nexus<small>Artifact</small></div>
-        <div class="arrow"></div>
-        <div class="node">ArgoCD<small>GitOps</small></div>
-        <div class="arrow"></div>
-        <div class="node new">EKS<small>Deploy</small></div>
-      </div>
-      <div class="feature-body">
-        <h3>GitOps 배포 플랫폼</h3>
-        <p>서버에 직접 밀어 넣던 배포를 GitOps로 바꾸고, Jenkins 공용 라이브러리로 서비스마다 달랐던 파이프라인을 하나로 맞췄습니다.</p>
-        <ul class="facts"><li><b>2 files</b>신규 서비스 배포 단위</li><li><b>15종</b>Terraform 모듈</li></ul>
-        <button class="link" data-pdf="docs/case-studies.pdf" data-title="작업 사례">자세히 보기 →</button>
-      </div>
-    </article>
-
-    <article class="feature">
-      <div class="flow">
-        <div class="node">Exporter<small>메트릭·로그</small></div>
-        <div class="arrow"></div>
-        <div class="node">Prometheus<small>Loki</small></div>
-        <div class="arrow"></div>
-        <div class="node new">Grafana<small>Alert → Slack</small></div>
-      </div>
-      <div class="feature-body">
-        <h3>모니터링 직접 구축</h3>
-        <p>상용 에이전트가 운영 서버 메모리 장애를 일으킨 뒤, 오픈소스로 모니터링을 다시 만들어 레거시 관제를 대체했습니다.</p>
-        <ul class="facts"><li><b>30대</b>운영 서버 적용</li><li><b>포트 단위</b>장애 감지</li></ul>
-        <button class="link" data-pdf="docs/case-studies.pdf" data-title="작업 사례">자세히 보기 →</button>
-      </div>
-    </article>
-  </div>
-</section>
-
-<!-- 5. 도구 -->
-<section class="section alt reveal">
-  <div class="wrap">
-    <p class="eyebrow">04 · 주로 쓰는 도구</p>
-    <ul class="logos">
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg" alt="" class="invert"><span>AWS</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/kubernetes/kubernetes-original.svg" alt=""><span>Kubernetes</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/terraform/terraform-original.svg" alt=""><span>Terraform</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/argocd/argocd-original.svg" alt=""><span>ArgoCD</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/jenkins/jenkins-original.svg" alt=""><span>Jenkins</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/helm/helm-original.svg" alt="" class="invert"><span>Helm</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/prometheus/prometheus-original.svg" alt=""><span>Prometheus</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/grafana/grafana-original.svg" alt=""><span>Grafana</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/docker/docker-original.svg" alt=""><span>Docker</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/mysql/mysql-original.svg" alt=""><span>MySQL</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/githubactions/githubactions-original.svg" alt=""><span>GitHub Actions</span></li>
-      <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/python/python-original.svg" alt=""><span>Python</span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- 6. 문서 + 연락 -->
-<section id="contact" class="section reveal">
-  <div class="wrap narrow">
-    <p class="eyebrow">05 · 더 보기</p>
-    <h2>궁금한 점이 있다면 편하게 연락 주세요</h2>
-    <ul class="docs">
-      <li><button data-pdf="docs/career.pdf" data-title="경력기술서">경력기술서<span>PDF</span></button></li>
-      <li><button data-pdf="docs/mysql-upgrade.pdf" data-title="MySQL 업그레이드">MySQL 업그레이드 사례<span>PDF</span></button></li>
-      <li><button data-pdf="docs/case-studies.pdf" data-title="작업 사례">배포 · 모니터링 · 장애 분석 사례<span>PDF</span></button></li>
-      <li><button data-pdf="docs/edu-project-summary.pdf" data-title="교육과정 프로젝트 요약">교육과정 프로젝트 요약<span>PDF</span></button></li>
-    </ul>
-    <div class="contact">
-      <a class="btn primary" href="mailto:kimseonho1126@gmail.com">kimseonho1126@gmail.com</a>
-      <a class="btn" href="https://github.com/Doro1126" rel="noopener">GitHub</a>
+    <p class="eyebrow">대표 작업</p>
+    <h2>직접 맡아서<br><span class="accent">끝까지</span> 해낸 일</h2>
+    <p class="sub">준비부터 운영 반영, 그 뒤의 문서화까지 직접 책임진 작업들입니다.</p>
+    <div class="works">
+      <article class="work">
+        <div class="flow" aria-hidden="true">
+          <span class="node">MySQL 5.7<small>지원 종료</small></span><span class="arrow">→</span>
+          <span class="node">정적 분석<small>호환성 점검</small></span><span class="arrow">→</span>
+          <span class="node new">MySQL 8.0<small>QA → 운영</small></span>
+        </div>
+        <div class="work-body">
+          <h3>Aurora MySQL 업그레이드</h3>
+          <p>지원 종료로 늘어나던 연장 지원 비용을 없앴습니다.<br>매일 덤프하던 QA 동기화도 실시간 복제로 바꿨습니다.</p>
+          <ul class="facts"><li><b>100<span>%</span></b>연장 지원 비용 제거</li><li><b>실시간</b>QA 동기화</li></ul>
+          <button class="more" data-pdf="docs/mysql-upgrade.pdf" data-title="MySQL 5.7 → 8.0 업그레이드">자세히 보기 →</button>
+        </div>
+      </article>
+      <article class="work">
+        <div class="flow" aria-hidden="true">
+          <span class="node">Jenkins<small>CI</small></span><span class="arrow">→</span>
+          <span class="node">Nexus<small>Artifact</small></span><span class="arrow">→</span>
+          <span class="node">ArgoCD<small>GitOps</small></span><span class="arrow">→</span>
+          <span class="node new">EKS<small>Deploy</small></span>
+        </div>
+        <div class="work-body">
+          <h3>GitOps 배포 플랫폼</h3>
+          <p>서버에 직접 밀어 넣던 배포를 GitOps로 바꿨습니다.<br>서비스마다 달랐던 파이프라인도 하나로 맞췄습니다.</p>
+          <ul class="facts"><li><b>2<span> files</span></b>신규 서비스 배포</li><li><b>15<span>종</span></b>Terraform 모듈</li></ul>
+          <button class="more" data-pdf="docs/case-studies.pdf" data-title="작업 사례">자세히 보기 →</button>
+        </div>
+      </article>
+      <article class="work">
+        <div class="flow" aria-hidden="true">
+          <span class="node">Exporter<small>메트릭·로그</small></span><span class="arrow">→</span>
+          <span class="node">Prometheus<small>Loki</small></span><span class="arrow">→</span>
+          <span class="node new">Grafana<small>Alert → Slack</small></span>
+        </div>
+        <div class="work-body">
+          <h3>모니터링 직접 구축</h3>
+          <p>상용 에이전트가 운영 서버 장애를 일으킨 뒤, 오픈소스로 모니터링을 다시 만들었습니다.<br>레거시 관제도 함께 대체했습니다.</p>
+          <ul class="facts"><li><b>30<span>대</span></b>운영 서버 적용</li><li><b>포트 단위</b>장애 감지</li></ul>
+          <button class="more" data-pdf="docs/case-studies.pdf" data-title="작업 사례">자세히 보기 →</button>
+        </div>
+      </article>
     </div>
   </div>
 </section>
 
-<footer class="foot">© 2026 김선호 · 이 페이지는 GitHub Actions로 자동 배포됩니다.</footer>
+<!-- 문서 -->
+<section id="docs" class="section alt reveal">
+  <div class="wrap">
+    <p class="eyebrow">문서</p>
+    <h2>더 자세한 내용은<br>여기에 정리했습니다</h2>
+    <div class="docs">
+      <button data-pdf="docs/career.pdf" data-title="경력기술서">경력기술서<span>PDF</span></button>
+      <button data-pdf="docs/mysql-upgrade.pdf" data-title="MySQL 업그레이드">MySQL 업그레이드 사례<span>PDF</span></button>
+      <button data-pdf="docs/case-studies.pdf" data-title="작업 사례">배포 · 모니터링 · 장애 분석 사례<span>PDF</span></button>
+      <button data-pdf="docs/edu-project-summary.pdf" data-title="교육과정 프로젝트 요약">교육과정 프로젝트 요약<span>PDF</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- 마무리 -->
+<section class="final">
+  <div class="wrap">
+    <h2>함께 일할 기회를<br>기다리고 있습니다</h2>
+    <p>궁금한 점이 있다면 편하게 연락 주세요.</p>
+    <div class="row">
+      <a class="cta" href="mailto:kimseonho1126@gmail.com">kimseonho1126@gmail.com</a>
+      <a class="cta line" href="https://github.com/Doro1126" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</section>
+<footer class="foot">© 2026 김선호 · GitHub Actions로 자동 배포됩니다.</footer>
 
 <dialog id="viewer" aria-labelledby="viewer-title">
   <div class="viewer-bar">
