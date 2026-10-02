@@ -190,13 +190,14 @@ h3 { color: var(--ink); font-weight: 700; }
 .docs span { font: 600 12px var(--mono); color: var(--accent); background: var(--accent-soft); padding: 3px 8px; border-radius: 6px; }
 
 /* 마지막 CTA */
-.final { background: var(--ink); color: #c9ccd3; text-align: center; padding: 96px 0; }
+.final { background: var(--ink); color: #c9ccd3; text-align: center; padding: 92px 0; }
 .final p { font-size: 17px; }
-.final .mail-label { margin-top: 30px; font: 700 12px var(--mono); letter-spacing: .14em; color: #8b9099; }
-.final .mail { display: inline-flex; align-items: center; gap: 14px; margin-top: 12px; padding: 14px 20px; border: 1px solid #3a3f4b; border-radius: 12px; }
-.final .mail span { font: 700 clamp(18px, 2.4vw, 24px) var(--mono); color: #fff; user-select: all; }
-.final .mail button { font: 600 13px var(--font); color: #c9ccd3; border: 1px solid #3a3f4b; border-radius: 8px; padding: 6px 12px; transition: color .2s, border-color .2s; }
-.final .mail button:hover { color: #fff; border-color: var(--accent); }
+.final .mail-label { display: inline-flex; align-items: center; gap: 9px; margin-top: 38px; font: 700 15px var(--mono); letter-spacing: .1em; color: #9aa0aa; }
+.final .mail-label svg { width: 19px; height: 19px; color: var(--accent); }
+.final .mail { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 10px; }
+.final .mail span { font: 700 clamp(22px, 2.6vw, 28px) var(--font); letter-spacing: -.02em; color: #fff; user-select: all; }
+.final .mail button { font: 600 13px var(--font); color: #9aa0aa; border: 1px solid #343944; border-radius: 999px; padding: 7px 18px; transition: color .2s, border-color .2s; }
+.final .mail button:hover { color: #fff; border-color: #6b7280; }
 .final .mail button.done { color: var(--accent); border-color: var(--accent); }
 .foot { background: var(--ink); color: #6b7080; text-align: center; font-size: 13px; padding: 0 0 40px; }
 

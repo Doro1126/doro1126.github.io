@@ -66,31 +66,29 @@
   <div class="project">
     <div class="name">CI/CD 표준화 및 GitOps 배포 체계 구축</div>
     <div>
-      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 05 ~ 진행 중</span></div>
-      <div class="role">DevOps / 사원</div>
+      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 05 ~ 현재</span></div>
       <div class="summary">SSH 직접 배포 방식을 GitOps로 전환하고 Jenkins 공용 라이브러리 기반으로 서비스별 파이프라인 통일</div>
       <ul class="points">
         <li>Jenkins Shared Library를 공통 함수와 템플릿 단위로 설계 및 파이프라인 표준화</li>
         <li>App-of-Apps GitOps 구조로 신규 서비스 배포를 설정 파일 2개 추가로 단축</li>
-        <li>운영 배포는 Build/Deploy 분리 및 승인 단계를 둔 구조로 설계</li>
+        <li>운영 배포는 Build/Deploy 분리 및 승인 게이트 구조로 설계</li>
         <li>이미지 태그 규칙 수립 및 Nexus 이미지 정리 자동화로 태그 덮어쓰기와 디스크 부족 문제 개선</li>
         <li>Jenkins 정규식 기반 RBAC 정비 및 ArgoCD AppProject 단위 개발자 권한 분리</li>
         <li>공용 Helm 차트로 배포 설정 통일, 서비스별 빌드 캐시 분리로 동시 빌드 실패 개선</li>
         <li>Jenkins Job 명명 규칙 정리 및 신규 서비스 배포 가이드 문서화</li>
       </ul>
-      <div class="stack"><span class="stack-label">사용 기술</span>Jenkins, Groovy, Nexus, ArgoCD, Helm, Docker BuildKit, Gradle, Python</div>
+      <div class="stack"><span class="stack-label">사용 기술</span>Jenkins, Groovy, Nexus, ArgoCD, Helm, Docker BuildKit, Gradle</div>
     </div>
   </div>
   <div class="rule-light"></div>
   <div class="project">
     <div class="name">EKS 신규 플랫폼 구축 및 레거시 관제 대체</div>
     <div>
-      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 05 ~ 진행 중</span></div>
-      <div class="role">DevOps / 사원</div>
+      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 05 ~ 현재</span></div>
       <div class="summary">레거시 EC2 약 50대를 대체할 EKS 기반 신규 플랫폼 구축 및 인프라 코드화</div>
       <ul class="points">
         <li>EKS(Karpenter, Fargate) 신규 플랫폼 구축 및 Terraform 커스텀 모듈 15종 작성</li>
-        <li>AWS 리소스는 Terraform, 쿠버네티스 리소스는 ArgoCD가 관리하도록 관리 경계 정립</li>
+        <li>AWS는 Terraform, 쿠버네티스는 ArgoCD로 나눠 Terraform/ArgoCD 관리 경계 정립</li>
         <li>ArgoCD와 ALB Controller를 Fargate로 분리해 서비스 노드와 무중단 분리</li>
         <li>Prometheus, Grafana, Loki 기반 모니터링 구축으로 레거시 관제 대체, 운영 서버 30대 적용</li>
         <li>Blackbox Exporter 기반 서비스 DOWN 감지 및 Slack 알림 체계 수립</li>
@@ -110,17 +108,16 @@
   <div class="project">
     <div class="name">AWS WAF 차단 정책 운영 및 시크릿 관리 개선</div>
     <div>
-      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 04 ~ 진행 중</span></div>
-      <div class="role">DevOps / 사원</div>
+      <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 04 ~ 현재</span></div>
       <div class="summary">리뉴얼 오픈 이후 WAF 규칙의 단계적 차단 전환 및 소스 코드 내 자격증명 정리</div>
       <ul class="points">
-        <li>오탐 가능성이 낮은 규칙부터 관찰 기간을 달리해 Count에서 Block으로 단계 전환</li>
+        <li>오탐 가능성이 낮은 규칙부터 관찰 기간을 달리해 Count → Block 단계 전환</li>
         <li>Label, Path, Regex, BodySize 기반 Custom Rule 6종 설계, 오탐 원인 분석 후 예외 처리</li>
         <li>사내 IP 차단 시 상세 내역을 Slack으로 전달하는 알림 연동</li>
-        <li>Pod Identity, ESO 도입으로 소스 내 AWS 키와 DB 비밀번호 제거 및 시크릿 관리 표준화</li>
+        <li>Pod Identity·ESO로 AWS 키·DB 비밀번호 제거, 시크릿/설정값 분리 표준 수립</li>
         <li>Root 계정 MFA 적용 및 전체 개방 보안그룹 정리</li>
       </ul>
-      <div class="stack"><span class="stack-label">사용 기술</span>AWS WAF, CloudWatch, EventBridge, Lambda(Python), Pod Identity, ESO</div>
+      <div class="stack"><span class="stack-label">사용 기술</span>AWS WAF, CloudWatch, EventBridge, Lambda, Pod Identity, ESO</div>
     </div>
   </div>
   <div class="rule-light"></div>
@@ -128,14 +125,13 @@
     <div class="name">Aurora MySQL 8.0 업그레이드 및 DB 운영 비용 절감</div>
     <div>
       <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 04 ~ 2026. 08</span></div>
-      <div class="role">DevOps / 사원</div>
       <div class="summary">Aurora MySQL 5.7 지원 종료 대응을 위한 QA·운영 DB 8.0.42 업그레이드 주도 및 QA 데이터 동기화 방식 개선</div>
       <ul class="points">
         <li>mysqlsh 정적 분석으로 예약어, Zero Date, 문자셋, 인증 방식 등 호환성 위험 사전 검증</li>
         <li>QA부터 운영까지 단계별 체크리스트로 업그레이드, Reader 기준 스키마 이관으로 영향 최소화</li>
         <li>mysqldump 배치를 DMS Serverless CDC로 전환, 268개 테이블 실시간 동기화</li>
         <li>반복되던 DB CPU 급등 원인을 Lambda 배치 분석으로 확인 후 복제 대상 조정, 슬로우 쿼리 튜닝 및 인덱스 개선 협업</li>
-        <li>Extended Support 비용 제거 및 8.4 LTS 업그레이드 대비 접속 계층 영향도 사전 검토</li>
+        <li>Extended Support 비용 100% 제거 및 8.4 LTS 업그레이드 대비 영향도 사전 검토</li>
       </ul>
       <div class="stack"><span class="stack-label">사용 기술</span>Aurora MySQL, MySQL Shell, AWS DMS, VPC Peering, EventBridge, Lambda</div>
     </div>
@@ -145,10 +141,9 @@
     <div class="name">유휴 리소스 정리 및 MSP 재계약을 통한 클라우드 비용 절감</div>
     <div>
       <div class="row1"><span class="company">(주) 집닥</span><span class="period">2026. 04 ~ 2026. 08</span></div>
-      <div class="role">DevOps / 사원</div>
       <div class="summary">사용 여부를 데이터로 확인한 뒤 리소스를 정리하고, 사용량 분석을 바탕으로 클라우드 계약 조건 개선</div>
       <ul class="points">
-        <li>VPC Flow Logs, CloudWatch 지표, DNS 연결 상태 교차 확인 후 미사용 DB 클러스터, 스테이징 환경, 유휴 LB·EIP 정리</li>
+        <li>VPC Flow Logs, CloudWatch 지표, DNS 연결 상태 교차 확인 후 미사용 DB·유휴 LB·스테이징 환경 정리</li>
         <li>레거시 서버 종료 전 nginx 설정과 의존성 확인, 헬스체크 경로 분리로 무중단 종료</li>
         <li>삭제 대상 데이터 S3 백업 및 리소스 의존 관계 역순의 삭제 절차 정리</li>
         <li>MSP 재계약을 통해 기존보다 유리한 할인 조건 확보</li>
@@ -168,7 +163,6 @@
     <div class="name">생성형 AI 사용량 통제 및 블록체인 인프라 구축</div>
     <div>
       <div class="row1"><span class="company">(주) 그루핀</span><span class="period">2025. 12 ~ 2026. 04</span></div>
-      <div class="role">DevOps / 사원</div>
       <div class="summary">Bedrock 팀·사용자별 사용량 관리 환경과 블록체인 노드·서비스 인프라 구축</div>
       <ul class="points">
         <li>LiteLLM으로 팀·사용자별 Bedrock 예산 한도 설정 및 사용자별 사용 로그 S3 저장 체계 구축</li>
@@ -184,14 +178,13 @@
     <div class="name">Istio Ambient 전환 및 로그 파이프라인 개선</div>
     <div>
       <div class="row1"><span class="company">(주) 그루핀</span><span class="period">2025. 06 ~ 2025. 12</span></div>
-      <div class="role">DevOps / 사원</div>
       <div class="summary">Sidecar 없는 서비스 메시 전환 및 개발팀이 직접 로그를 검색할 수 있는 환경 구축</div>
       <ul class="points">
-        <li>Istio Ambient 모드 전환, mTLS 전체 적용 및 정책이 필요한 서비스에만 Waypoint(L7) 프록시 선택 적용</li>
+        <li>Istio Ambient 모드 전환(Sidecar 제거), mTLS 및 선택적 Waypoint L7 적용</li>
         <li>Nginx Ingress에서 Istio로 전환 및 CI/CD 연동용 Helm 템플릿 작성</li>
         <li>Vector, Elasticsearch 기반 로그 파이프라인 구축, VRL과 GeoIP를 활용한 글로벌 트래픽 대시보드 제공</li>
         <li>Karpenter 기반 Auto Scaling 및 Velero 기반 클러스터 백업·복구 체계 구축</li>
-        <li>Jenkins, GitLab, GitHub Actions CI/CD 표준화 및 Multi-stage 빌드 적용</li>
+        <li>Jenkins, GitLab, GitHub Actions CI/CD 표준화, Multi-stage 빌드로 이미지 경량화</li>
       </ul>
       <div class="stack"><span class="stack-label">사용 기술</span>Istio, Karpenter, Velero, Vector, Elasticsearch, Kibana, Jenkins, GitHub Actions</div>
     </div>
@@ -201,7 +194,6 @@
     <div class="name">IaC 도입 및 하이브리드 인프라 접근 관리 개선</div>
     <div>
       <div class="row1"><span class="company">(주) 그루핀</span><span class="period">2025. 01 ~ 2025. 06</span></div>
-      <div class="role">DevOps / 사원</div>
       <div class="summary">AWS, NHN Cloud, 사내 Proxmox를 함께 쓰는 하이브리드 인프라의 코드 관리 및 서버 접근 방식 개선</div>
       <ul class="points">
         <li>HCP Terraform 도입으로 인프라 형상 관리 및 동일 환경 복제 체계 구축</li>
