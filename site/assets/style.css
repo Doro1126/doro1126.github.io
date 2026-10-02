@@ -206,3 +206,42 @@ dialog iframe { flex: 1; width: 100%; border: 0; }
   .reveal { opacity: 1; transform: none; }
   * { animation: none !important; transition: none !important; }
 }
+
+/* HERO 목업 탭 */
+.mock-side button { text-align: left; padding: 6px 8px; border-radius: 6px; color: var(--muted); font-size: 13px; transition: background .15s, color .15s; }
+.mock-side button:hover { background: var(--alt); color: var(--ink); }
+.mock-side button.on { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+.mock-main[hidden] { display: none; }
+.mock-main { animation: fade .25s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } }
+.stages { display: flex; flex-wrap: wrap; gap: 6px; }
+.stages span { font: 600 11px var(--mono); padding: 6px 8px; border-radius: 6px; background: #ecfdf3; color: var(--ok); }
+.stages span::before { content: "✓ "; }
+.spark { display: flex; align-items: flex-end; gap: 4px; height: 92px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; }
+.spark i { flex: 1; background: linear-gradient(var(--accent), #fbb68a); border-radius: 3px 3px 0 0; opacity: .85; }
+.bars { display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.bars div { display: grid; grid-template-columns: 52px 1fr 32px; align-items: center; gap: 10px; font-size: 12px; }
+.bars i { height: 14px; border-radius: 4px; background: #d1d5db; }
+.bars i.after { background: var(--accent); }
+.bars b { color: var(--ink); text-align: right; }
+
+/* 문제 해결 캐러셀 */
+.carousel { position: relative; display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; gap: 16px; }
+.viewport { overflow: hidden; border-radius: 18px; }
+.track { display: flex; transition: transform .45s cubic-bezier(.22,.8,.3,1); }
+.slide { flex: 0 0 100%; }
+.nav-btn { width: 48px; height: 48px; border-radius: 50%; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+           font-size: 26px; line-height: 1; color: var(--ink); transition: background .15s, color .15s, transform .15s; }
+.nav-btn:hover { background: var(--accent); color: #fff; transform: scale(1.05); }
+.nav-btn:disabled { opacity: .35; cursor: default; transform: none; background: #fff; color: var(--ink); }
+.dots { display: flex; justify-content: center; gap: 8px; margin-top: 22px; }
+.dots button { width: 8px; height: 8px; border-radius: 999px; background: #d4d6db; transition: width .2s, background .2s; }
+.dots button[aria-selected="true"] { width: 26px; background: var(--accent); }
+.inc-id.imp { color: #2563eb; background: #eff4ff; }
+.inc-foot span { font-weight: 700; color: var(--ink); }
+
+@media (max-width: 640px) {
+  .carousel { grid-template-columns: 1fr; }
+  .nav-btn { position: absolute; top: -64px; width: 40px; height: 40px; font-size: 22px; }
+  .nav-btn.prev { right: 52px; } .nav-btn.next { right: 0; }
+}

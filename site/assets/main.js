@@ -39,3 +39,63 @@
   dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
   dlg.addEventListener('close', () => { frame.src = 'about:blank'; if (opener) opener.focus(); });
 })();
+
+// HERO 목업 탭 전환
+(() => {
+  const tabs = document.querySelectorAll('.mock-side [role="tab"]');
+  const path = document.getElementById('mock-path');
+  tabs.forEach((t) => t.addEventListener('click', () => {
+    tabs.forEach((x) => {
+      const on = x === t;
+      x.classList.toggle('on', on);
+      x.setAttribute('aria-selected', on);
+      document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+    });
+    path.textContent = t.dataset.path;
+  }));
+})();
+
+// 문제 해결 기록 캐러셀
+(() => {
+  const root = document.querySelector('.carousel');
+  if (!root) return;
+  const track = root.querySelector('.track');
+  const slides = [...track.children];
+  const prev = root.querySelector('.prev');
+  const next = root.querySelector('.next');
+  const dots = document.querySelector('.dots');
+  let i = 0;
+
+  slides.forEach((s, n) => {
+    const d = document.createElement('button');
+    d.setAttribute('role', 'tab');
+    d.setAttribute('aria-label', `${n + 1}번째 기록`);
+    d.addEventListener('click', () => go(n));
+    dots.appendChild(d);
+  });
+
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    track.style.transform = `translateX(-${i * 100}%)`;
+    slides.forEach((s, k) => s.setAttribute('aria-hidden', k !== i));
+    [...dots.children].forEach((d, k) => d.setAttribute('aria-selected', k === i));
+    prev.disabled = i === 0;
+    next.disabled = i === slides.length - 1;
+  }
+  prev.addEventListener('click', () => go(i - 1));
+  next.addEventListener('click', () => go(i + 1));
+  root.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') go(i - 1);
+    if (e.key === 'ArrowRight') go(i + 1);
+  });
+  // 터치 스와이프
+  let x0 = null;
+  track.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+  go(0);
+})();

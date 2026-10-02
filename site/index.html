@@ -37,14 +37,18 @@
     </div>
 
     <figure>
-      <div class="mock" aria-hidden="true">
-        <div class="mock-bar"><i></i><i></i><i></i><span>argocd · applications</span></div>
+      <div class="mock">
+        <div class="mock-bar" aria-hidden="true"><i></i><i></i><i></i><span id="mock-path">argocd · applications</span></div>
         <div class="mock-body">
-          <div class="mock-side">
+          <div class="mock-side" role="tablist" aria-label="플랫폼 화면">
             <b>Platform</b>
-            <span class="on">Applications</span><span>Pipelines</span><span>Monitoring</span><span>Cost</span>
+            <button role="tab" class="on" aria-selected="true" aria-controls="tab-apps" data-path="argocd · applications">Applications</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-pipe" data-path="jenkins · pipelines">Pipelines</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-mon" data-path="grafana · monitoring">Monitoring</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-cost" data-path="billing · cost">Cost</button>
           </div>
-          <div class="mock-main">
+
+          <div class="mock-main" id="tab-apps" role="tabpanel">
             <div class="mock-title">배포 현황 <small>QA · 실시간</small></div>
             <div class="kpis">
               <div><em>Synced</em><b>16/16</b></div>
@@ -58,6 +62,46 @@
             </div>
             <div class="chat">새 서비스 배포하려면 뭐가 필요해?</div>
             <div class="chat bot">Application.yaml, values.yaml 두 개면 됩니다.</div>
+          </div>
+
+          <div class="mock-main" id="tab-pipe" role="tabpanel" hidden>
+            <div class="mock-title">QA 배포 파이프라인 <small>Shared Library</small></div>
+            <div class="stages">
+              <span class="ok">Checkout</span><span class="ok">Build</span><span class="ok">Push</span><span class="ok">GitOps</span><span class="ok">Sync</span><span class="ok">Prune</span>
+            </div>
+            <div class="apps">
+              <div>#56 qa-20260921-56-917d21b3<span class="pill sync">Success</span><span class="pill heal">1m 42s</span></div>
+              <div>#55 qa-20260921-55-3a9c01e4<span class="pill sync">Success</span><span class="pill heal">1m 38s</span></div>
+              <div>#54 qa-20260920-54-8b72d6f0<span class="pill sync">Success</span><span class="pill heal">1m 51s</span></div>
+            </div>
+            <div class="chat bot">운영 배포는 승인 후 Deploy Job에서 진행됩니다.</div>
+          </div>
+
+          <div class="mock-main" id="tab-mon" role="tabpanel" hidden>
+            <div class="mock-title">서비스 상태 <small>Prometheus · Loki</small></div>
+            <div class="kpis">
+              <div><em>Targets</em><b>30/30</b></div>
+              <div><em>Service UP</em><b>40/40</b></div>
+              <div><em>Firing</em><b>0</b></div>
+            </div>
+            <div class="spark" aria-hidden="true">
+              <i style="height:38%"></i><i style="height:44%"></i><i style="height:40%"></i><i style="height:52%"></i><i style="height:47%"></i><i style="height:35%"></i><i style="height:42%"></i><i style="height:58%"></i><i style="height:45%"></i><i style="height:39%"></i><i style="height:50%"></i><i style="height:43%"></i><i style="height:36%"></i><i style="height:48%"></i><i style="height:41%"></i><i style="height:37%"></i>
+            </div>
+            <div class="chat bot">서비스 포트가 응답하지 않으면 Slack으로 바로 알립니다.</div>
+          </div>
+
+          <div class="mock-main" id="tab-cost" role="tabpanel" hidden>
+            <div class="mock-title">RDS 월 비용 <small>업그레이드 전 · 후</small></div>
+            <div class="bars">
+              <div><span>Before</span><i style="width:100%"></i><b>100</b></div>
+              <div><span>After</span><i class="after" style="width:43%"></i><b>43</b></div>
+            </div>
+            <div class="kpis">
+              <div><em>RDS</em><b>-57%</b></div>
+              <div><em>Extended Support</em><b>0</b></div>
+              <div><em>유휴 리소스</em><b>정리</b></div>
+            </div>
+            <div class="chat bot">지우기 전에 트래픽 로그로 미사용부터 확인했습니다.</div>
           </div>
         </div>
       </div>
@@ -144,37 +188,52 @@
 <section id="how" class="section alt reveal">
   <div class="wrap">
     <p class="eyebrow">문제를 푸는 방식</p>
-    <h2>장애 하나를<br><span class="accent">끝까지</span> 따라간 기록</h2>
+    <h2>문제를<br><span class="accent">끝까지</span> 따라간 기록</h2>
     <p class="sub">증상만 막으면 같은 일이 다시 생깁니다.<br>그래서 원인을 찾을 때까지 후보를 하나씩 지워 갑니다.</p>
 
-    <article class="incident" aria-label="장애 분석 기록">
-      <header class="inc-head">
-        <span class="inc-id">INCIDENT</span>
-        <h3>매일 같은 시각, QA DB CPU가 70%까지 오르는 문제</h3>
-        <span class="inc-badge">RESOLVED</span>
-      </header>
-      <dl class="inc-meta">
-        <div><dt>영향</dt><dd>QA DB 성능 저하</dd></div>
-        <div><dt>지속</dt><dd>11일간 하루 두 번 반복</dd></div>
-        <div><dt>역할</dt><dd>원인 추적 · 조치</dd></div>
-      </dl>
-      <ol class="inc-steps">
-        <li><span class="step">감지</span>
-          <p>매일 10시와 18시에 CPU가 평소 20%대에서 70%까지 오르는 패턴을 확인했습니다.<br>시간이 정확히 반복된다는 점에서 예약 작업을 먼저 의심했습니다.</p></li>
-        <li><span class="step">추적</span>
-          <p>서버 33대의 크론, DB 이벤트 스케줄러, 애플리케이션 스케줄러를 차례로 확인하며 후보를 하나씩 지웠습니다.</p></li>
-        <li><span class="step">원인</span>
-          <p>마지막으로 남은 Lambda 배치를 디컴파일해, 월별 통계 약 2만 건을 지우고 다시 쓰는 로직을 찾았습니다.<br>이 대량 변경이 실시간 복제로 그대로 넘어오며 부하를 만들고 있었습니다.</p></li>
-        <li><span class="step">조치</span>
-          <p>운영팀과 테이블 사용 여부를 확인한 뒤 해당 통계 테이블을 복제 대상에서 제외했습니다.</p></li>
-        <li><span class="step done">남긴 것</span>
-          <p>원인 분석 기록과 복제 대상 테이블을 관리하는 기준을 문서로 남겼습니다.</p></li>
-      </ol>
-      <footer class="inc-foot">
-        <span>같은 방식으로 해결한 다른 문제</span>
-        <ul><li>DB 커넥션 누수</li><li>간헐적 502 에러</li><li>인증 메일 16분 지연</li></ul>
-      </footer>
-    </article>
+    <div class="carousel" aria-roledescription="carousel" aria-label="문제 해결 기록">
+      <button class="nav-btn prev" aria-label="이전 기록">‹</button>
+      <div class="viewport"><div class="track">
+      <article class="incident slide" aria-roledescription="slide" aria-label="매일 같은 시각, QA DB CPU가 70%까지 오르는 문제">
+        <header class="inc-head"><span class="inc-id ">INCIDENT</span><h3>매일 같은 시각, QA DB CPU가 70%까지 오르는 문제</h3><span class="inc-badge">RESOLVED</span></header>
+        <dl class="inc-meta"><div><dt>영향</dt><dd>QA DB 성능 저하</dd></div><div><dt>지속</dt><dd>11일간 하루 두 번 반복</dd></div><div><dt>역할</dt><dd>원인 추적 · 조치</dd></div></dl>
+        <ol class="inc-steps">
+          <li><span class="step">감지</span><p>매일 10시와 18시에 CPU가 평소 20%대에서 70%까지 오르는 패턴을 확인했습니다.<br>시간이 정확히 반복된다는 점에서 예약 작업을 먼저 의심했습니다.</p></li>
+          <li><span class="step">추적</span><p>서버 33대의 크론, DB 이벤트 스케줄러, 애플리케이션 스케줄러를 차례로 확인하며 후보를 하나씩 지웠습니다.</p></li>
+          <li><span class="step">원인</span><p>마지막으로 남은 Lambda 배치를 디컴파일해, 월별 통계 약 2만 건을 지우고 다시 쓰는 로직을 찾았습니다.<br>이 대량 변경이 실시간 복제로 그대로 넘어오며 부하를 만들고 있었습니다.</p></li>
+          <li><span class="step">조치</span><p>운영팀과 테이블 사용 여부를 확인한 뒤 해당 통계 테이블을 복제 대상에서 제외했습니다.</p></li>
+          <li><span class="step done">남긴 것</span><p>원인 분석 기록과 복제 대상 테이블을 관리하는 기준을 문서로 남겼습니다.</p></li>
+        </ol>
+        <footer class="inc-foot"><span>결과</span><ul><li>반복 부하 원인 제거</li><li>복제 대상 관리 기준 수립</li></ul></footer>
+      </article>
+      <article class="incident slide" aria-roledescription="slide" aria-label="QA DB 커넥션이 주기적으로 급증하는 문제">
+        <header class="inc-head"><span class="inc-id ">INCIDENT</span><h3>QA DB 커넥션이 주기적으로 급증하는 문제</h3><span class="inc-badge">RESOLVED</span></header>
+        <dl class="inc-meta"><div><dt>영향</dt><dd>DB 커넥션 15개 → 84개</dd></div><div><dt>특이점</dt><dd>운영은 문제없음</dd></div><div><dt>역할</dt><dd>원인 분석 · 안전 제거</dd></div></dl>
+        <ol class="inc-steps">
+          <li><span class="step">감지</span><p>QA DB 커넥션 수가 일정한 주기로 15개에서 84개까지 늘어나는 현상을 확인했습니다.</p></li>
+          <li><span class="step">추적</span><p>커넥션을 만드는 프로세스를 따라가, 오래전부터 기동에 실패한 채 남아 있던 웹앱을 찾았습니다.</p></li>
+          <li><span class="step">원인</span><p>기동 실패 직전에 만들어진 DB 풀의 정리 스레드가 살아남아 30초마다 커넥션을 열고 버리고 있었습니다.<br>운영은 실패 지점이 달라서 우연히 안전했을 뿐, 같은 위험을 안고 있었습니다.</p></li>
+          <li><span class="step">조치</span><p>언제든 되돌릴 수 있는 방식으로 웹앱을 제거하고, 운영 서비스는 재기동 없이 처리했습니다.</p></li>
+          <li><span class="step done">남긴 것</span><p>환경별로 실패 지점이 다를 수 있다는 점까지 포함한 원인 분석과 레거시 앱 제거 절차를 남겼습니다.</p></li>
+        </ol>
+        <footer class="inc-foot"><span>결과</span><ul><li>커넥션 82 → 1</li><li>누수 로그 하루 960건 → 0</li></ul></footer>
+      </article>
+      <article class="incident slide" aria-roledescription="slide" aria-label="이미지 저장소 디스크가 가득 차 배포가 멈춘 문제">
+        <header class="inc-head"><span class="inc-id imp">IMPROVEMENT</span><h3>이미지 저장소 디스크가 가득 차 배포가 멈춘 문제</h3><span class="inc-badge">IMPROVED</span></header>
+        <dl class="inc-meta"><div><dt>영향</dt><dd>빌드 · 배포 실패</dd></div><div><dt>원인 범위</dt><dd>저장소 정리 구조 전체</dd></div><div><dt>역할</dt><dd>원인 분석 · 자동화</dd></div></dl>
+        <ol class="inc-steps">
+          <li><span class="step">감지</span><p>빌드가 이미지 업로드 단계에서 실패했고, 저장소 서버 디스크가 100%인 것을 확인했습니다.</p></li>
+          <li><span class="step">추적</span><p>저장소 로그와 파일을 직접 확인하며 태그를 지워도 디스크가 줄지 않는 이유를 찾았습니다.</p></li>
+          <li><span class="step">원인</span><p>이미지 삭제가 4단계로 나뉘어 동작하는데, 마지막 정리 단계가 등록되어 있지 않았습니다.<br>업로드할 때마다 남는 임시 파일도 함께 쌓이고 있었습니다.</p></li>
+          <li><span class="step">조치</span><p>파이프라인 마지막 단계에 최근 이미지만 남기는 정리 자동화를 넣고, 정리 작업을 순서대로 예약했습니다.<br>정리가 실패해도 배포는 멈추지 않도록 안전장치를 두었습니다.</p></li>
+          <li><span class="step done">남긴 것</span><p>이미지 태그 규칙과 저장소 정리 절차를 운영 가이드로 정리했습니다.</p></li>
+        </ol>
+        <footer class="inc-foot"><span>결과</span><ul><li>디스크 70% → 29%</li><li>약 20GB 회수</li></ul></footer>
+      </article>
+      </div></div>
+      <button class="nav-btn next" aria-label="다음 기록">›</button>
+    </div>
+    <div class="dots" role="tablist" aria-label="기록 선택"></div>
   </div>
 </section>
 
