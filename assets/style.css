@@ -138,7 +138,7 @@ h3 { color: var(--ink); font-weight: 600; }
 .arch { display: grid; grid-template-columns: 1fr; gap:24px; background: #fff; border: 1px solid var(--line); border-radius: 18px; padding:24px; }
 .arch[hidden] { display: none; }   /* [hidden]이 display:grid에 밀리지 않게 */
 .arch-img { display: block; position: relative; padding:0; background: var(--alt); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: zoom-in; }
-.arch-img img { display: block; width: 100%; height: auto; max-height: 460px; min-height: 240px; object-fit: contain; object-position: center; background: #fff; }
+.arch-img img { display: block; width: 100%; height: auto; max-height: 780px; min-height: 240px; object-fit: contain; object-position: center; background: #fff; }
 .arch-img .zoom { position: absolute; right: 10px; bottom: 10px; padding:4px 12px; border-radius: 6px; background: rgba(17,19,24,.78); color: #fff; font: 600 12px var(--font); opacity: 0; transition: opacity .2s; }
 .arch-img:hover .zoom, .arch-img:focus-visible .zoom { opacity: 1; }
 .arch figcaption { display: grid; grid-template-columns: 1fr auto; gap:8px 48px; align-items: start; }
