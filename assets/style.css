@@ -171,8 +171,7 @@ h3 { color: var(--ink); font-weight: 600; }
 .final .who span { display: block; margin-top:10px; font-size: 17px; color: #8a909c; }
 .final .reach { text-align: right; }
 .final .reach p { font-size: 16px; color: #9aa0aa; }
-.final .mail { display: inline-block; margin-top:10px; font-size: clamp(22px, 2.6vw, 30px); font-weight: 700; letter-spacing: -.02em; color: #fff; transition: color .2s; }
-.final .mail:hover { color: var(--accent); }
+.final .mail { display: inline-block; margin-top:10px; font-size: clamp(22px, 2.6vw, 30px); font-weight: 700; letter-spacing: -.02em; color: #fff; }
 .final .copy { margin-top:24px; font-size: 13px; color: #6b7080; }
 @media (max-width: 640px) {
   .final { padding:64px 0 28px; }
